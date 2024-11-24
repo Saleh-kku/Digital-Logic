@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentation Slides</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            background: #eaeaea;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .slide {
+            display: none;
+            padding: 40px;
+            text-align: center;
+            background: white;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            width: 80%;
+            max-width: 800px;
+            transition: transform 0.3s ease;
+        }
+        .active {
+            display: block;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #007BFF;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+        .navigation {
+            margin-top: 30px;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            h1 {
+                font-size: 20px;
+            }
+            li {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="slide active">
+    <h1>Decimal to Binary Conversion</h1>
+    <p>Which of the following decimal numbers is equivalent to the binary number (101011)?</p>
+    <ul>
+        <li>A. 167</li>
+        <li>B. 35</li>
+        <li>C. 43</li>
+        <li>D. 68</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h1>Binary to Hexadecimal Conversion</h1>
+    <p>Which of the following hexadecimal numbers is equivalent to the binary number (110011011)?</p>
+    <ul>
+        <li>A. 19B</li>
+        <li>B. 13C</li>
+        <li>C. 2AB</li>
+        <li>D. CAE</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h1>Hexadecimal to Octal Conversion</h1>
+    <p>Which of the following octal numbers is equivalent to the hexadecimal number (2AF)?</p>
+    <ul>
+        <li>A. 763</li>
+        <li>B. 1476</li>
+        <li>C. 1257</li>
+        <li>D. 898</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h1>Decimal to Hexadecimal Conversion</h1>
+    <p>Which of the following hexadecimal numbers is equivalent to the decimal number (2649)?</p>
+    <ul>
+        <li>A. F37</li>
+        <li>B. CF1</li>
+        <li>C. BF2</li>
+        <li>D. A59</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h1>Binary-Coded Decimal (BCD)</h1>
+    <p>Which of the following BCD is equivalent to the decimal number (543)?</p>
+    <ul>
+        <li>A. 1100 0100 0011</li>
+        <li>B. 0101 0100 0011</li>
+        <li>C. 0101 1001 0011</li>
+        <li>D. 0101 0100 1100</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h1>Gray Code</h1>
+    <p>Gray code is a binary code where two successive values differ in only ------- bit change.</p>
+    <ul>
+        <li>A. Two</li>
+        <li>B. Four</li>
+        <li>C. Three</li>
+        <li>D. One</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h1>What does Unicode stand for?</h1>
+    <ul>
+        <li>A. Universal Character Encoding</li>
+        <li>B. United Code for International Data Exchange</li>
+        <li>C. Universal Code for Information Exchange</li>
+        <li>D. United Character Encoding</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h1>Boolean Algebra</h1>
+    <p>Using the basic identities of boolean algebra, what would be the equivalent of X + YZ?</p>
+    <ul>
+        <li>A. Y + XZ</li>
+        <li>B. Z + XY</li>
+        <li>C. (X + Y)(X + Z)</li>
+        <li>D. (X + Z)</li>
+    </ul>
+</div>
+
+<div class="navigation">
+    <button onclick="prevSlide()">Previous</button>
+    <button onclick="nextSlide()">Next</button>
+</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+
+    function showSlide(index) {
+        slides.forEach((slide, i) => {
+            slide.classList.toggle('active', i === index);
+        });
+    }
+
+    function nextSlide() {
+        currentSlide = (currentSlide + 1) % slides.length;
+        showSlide(currentSlide);
+    }
+
+    function prevSlide() {
+        currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+        showSlide(currentSlide);
+    }
+</script>
+
+</body>
+</html>
