@@ -335,20 +335,20 @@
 </table>
 
 <script>
-    function updateGateDetails() {
-        const selectedGate = document.getElementById('gateSelector').value;
+function updateGateDetails() {
+    const selectedGate = document.getElementById('gateSelector').value;
 
-        // Hide all gate rows
-        const gateRows = document.querySelectorAll('tbody tr');
-        gateRows.forEach(row => row.style.display = 'none');
+    // Hide all gate rows
+    const gateRows = document.querySelectorAll('tbody tr');
+    gateRows.forEach(row => row.style.display = 'none');
 
-        // Show the selected gate or all gates
-        if (selectedGate === 'ALL') {
-            gateRows.forEach(row => row.style.display = 'table-row');
-        } else if (selectedGate) {
-            document.getElementById(selectedGate.toLowerCase() + 'GateRow').style.display = 'table-row';
-        }
+    // Show the selected gate or all gates
+    if (selectedGate === 'ALL') {
+        gateRows.forEach(row => row.style.display = 'table-row');
+    } else if (selectedGate) {
+        document.getElementById(selectedGate.toLowerCase() + 'GateRow').style.display = 'table-row';
     }
+}
 
     function updateOutput(gate) {
         let output;
