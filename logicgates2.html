@@ -127,7 +127,7 @@
     <tbody>
         <tr>
             <td class="bold">NOT</td>
-            <td class="bold"><span style="text-decoration: overline;">Y</span> = A</td>
+            <td class="bold"> Y = <span style="text-decoration: overline;">A</span></td>
             <td>
                 <div class="input-container">
                     <div class="switches-container">
@@ -172,7 +172,7 @@
         </tr>
         <tr>
             <td class="bold">NAND</td>
-            <td class="bold">Y = ¬(A . B)</td>
+            <td class="bold">Y = <span style="text-decoration: overline;">(A . B)</span> </td>
             <td>
                 <div class="input-container">
                     <div class="switches-container">
@@ -193,6 +193,102 @@
                 </table>
             </td>
             <td><img class="ic-representation" src="NAND_IC_NB.png" alt="74HC20 IC"></td>
+        </tr>
+        <tr>
+            <td class="bold">OR</td>
+            <td class="bold">Y = A + B</td>
+            <td>
+                <div class="input-container">
+                    <div class="switches-container">
+                        <input type="checkbox" class="toggle" id="orInputA" onchange="updateOutput('OR')">
+                        <input type="checkbox" class="toggle" id="orInputB" onchange="updateOutput('OR')">
+                    </div>
+                    <img src="OR_NB.png" alt="OR Gate" class="input-image">
+                </div>
+            </td>
+            <td class="output blue" id="orOutput">0</td>
+            <td>
+                <table>
+                    <tr><td>A</td><td>B</td><td>Y</td></tr>
+                    <tr><td>0</td><td>0</td><td>0</td></tr>
+                    <tr><td>0</td><td>1</td><td>1</td></tr>
+                    <tr><td>1</td><td>0</td><td>1</td></tr>
+                    <tr><td>1</td><td>1</td><td>1</td></tr>
+                </table>
+            </td>
+            <td><img class="ic-representation" src="OR_IC_NB.png" alt="74HC32 IC"></td>
+        </tr>
+        <tr>
+            <td class="bold">NOR</td>
+            <td class="bold">Y = <span style="text-decoration: overline;">(A + B)</span> </td>
+            <td>
+                <div class="input-container">
+                    <div class="switches-container">
+                        <input type="checkbox" class="toggle" id="norInputA" onchange="updateOutput('NOR')">
+                        <input type="checkbox" class="toggle" id="norInputB" onchange="updateOutput('NOR')">
+                    </div>
+                    <img src="NOR_NB.png" alt="NOR Gate" class="input-image">
+                </div>
+            </td>
+            <td class="output blue" id="norOutput">0</td>
+            <td>
+                <table>
+                    <tr><td>A</td><td>B</td><td>Y</td></tr>
+                    <tr><td>0</td><td>0</td><td>1</td></tr>
+                    <tr><td>0</td><td>1</td><td>0</td></tr>
+                    <tr><td>1</td><td>0</td><td>0</td></tr>
+                    <tr><td>1</td><td>1</td><td>0</td></tr>
+                </table>
+            </td>
+            <td><img class="ic-representation" src="NOR_IC_NB.png" alt="74HC02 IC"></td>
+        </tr>
+        <tr>
+            <td class="bold">XOR</td>
+            <td class="bold">Y = A ⊕ B</td>
+            <td>
+                <div class="input-container">
+                    <div class="switches-container">
+                        <input type="checkbox" class="toggle" id="xorInputA" onchange="updateOutput('XOR')">
+                        <input type="checkbox" class="toggle" id="xorInputB" onchange="updateOutput('XOR')">
+                    </div>
+                    <img src="XOR_NB.png" alt="XOR Gate" class="input-image">
+                </div>
+            </td>
+            <td class="output blue" id="xorOutput">0</td>
+            <td>
+                <table>
+                    <tr><td>A</td><td>B</td><td>Y</td></tr>
+                    <tr><td>0</td><td>0</td><td>0</td></tr>
+                    <tr><td>0</td><td>1</td><td>1</td></tr>
+                    <tr><td>1</td><td>0</td><td>1</td></tr>
+                    <tr><td>1</td><td>1</td><td>0</td></tr>
+                </table>
+            </td>
+            <td><img class="ic-representation" src="XOR_IC_NB.png" alt="74HC86 IC"></td>
+        </tr>
+        <tr>
+            <td class="bold">XNOR</td>
+            <td class="bold">Y = <span style="text-decoration: overline;">(A ⊕ B)</span></td>
+            <td>
+                <div class="input-container">
+                    <div class="switches-container">
+                        <input type="checkbox" class="toggle" id="xnorInputA" onchange="updateOutput('XNOR')">
+                        <input type="checkbox" class="toggle" id="xnorInputB" onchange="updateOutput('XNOR')">
+                    </div>
+                    <img src="XNOR_NB.png" alt="XNOR Gate" class="input-image">
+                </div>
+            </td>
+            <td class="output blue" id="xnorOutput">0</td>
+            <td>
+                <table>
+                    <tr><td>A</td><td>B</td><td>Y</td></tr>
+                    <tr><td>0</td><td>0</td><td>1</td></tr>
+                    <tr><td>0</td><td>1</td><td>0</td></tr>
+                    <tr><td>1</td><td>0</td><td>0</td></tr>
+                    <tr><td>1</td><td>1</td><td>1</td></tr>
+                </table>
+            </td>
+            <td><img class="ic-representation" src="XNOR_IC_NB.png" alt="74HC26 IC"></td>
         </tr>
     </tbody>
 </table>
@@ -222,6 +318,38 @@
                 const nandOutput = document.getElementById('nandOutput');
                 nandOutput.innerText = output;
                 nandOutput.className = output === 1 ? 'output red' : 'output blue';
+                break;
+            case 'OR':
+                const orA = document.getElementById('orInputA').checked ? 1 : 0;
+                const orB = document.getElementById('orInputB').checked ? 1 : 0;
+                output = orA || orB ? 1 : 0;
+                const orOutput = document.getElementById('orOutput');
+                orOutput.innerText = output;
+                orOutput.className = output === 1 ? 'output red' : 'output blue';
+                break;
+            case 'NOR':
+                const norA = document.getElementById('norInputA').checked ? 1 : 0;
+                const norB = document.getElementById('norInputB').checked ? 1 : 0;
+                output = !(norA || norB) ? 1 : 0;
+                const norOutput = document.getElementById('norOutput');
+                norOutput.innerText = output;
+                norOutput.className = output === 1 ? 'output red' : 'output blue';
+                break;
+            case 'XOR':
+                const xorA = document.getElementById('xorInputA').checked ? 1 : 0;
+                const xorB = document.getElementById('xorInputB').checked ? 1 : 0;
+                output = (xorA ^ xorB) ? 1 : 0;
+                const xorOutput = document.getElementById('xorOutput');
+                xorOutput.innerText = output;
+                xorOutput.className = output === 1 ? 'output red' : 'output blue';
+                break;
+            case 'XNOR':
+                const xnorA = document.getElementById('xnorInputA').checked ? 1 : 0;
+                const xnorB = document.getElementById('xnorInputB').checked ? 1 : 0;
+                output = !(xnorA ^ xnorB) ? 1 : 0;
+                const xnorOutput = document.getElementById('xnorOutput');
+                xnorOutput.innerText = output;
+                xnorOutput.className = output === 1 ? 'output red' : 'output blue';
                 break;
         }
     }
