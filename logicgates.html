@@ -30,8 +30,12 @@
             background-color: #007BFF;
             color: white;
         }
-        img {
-            width: 200px; /* Fixed width for uniformity */
+        .logic-diagram {
+            width: 150px; /* Fixed width for logic diagrams */
+            height: auto; /* Maintain aspect ratio */
+        }
+        .ic-representation {
+            width: 400px; /* Fixed width for IC representations */
             height: auto; /* Maintain aspect ratio */
         }
     </style>
@@ -61,8 +65,8 @@
                     <tr><td>1</td><td>0</td></tr>
                 </table>
             </td>
-            <td><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/NOT_ANSI_Labelled.svg/1200px-NOT_ANSI_Labelled.svg.png" alt="NOT Gate"></td>
-            <td><img src="https://www.researchgate.net/profile/Gabriele-Fabio/publication/327298148/figure/fig1/AS:694557620166912@1542033290926/74HC14-IC-NOT-Gate-Diagram.png" alt="74HC14 IC"></td>
+            <td><img class="logic-diagram" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/NOT_ANSI_Labelled.svg/1200px-NOT_ANSI_Labelled.svg.png" alt="NOT Gate"></td>
+            <td><img class="ic-representation" src="https://www.researchgate.net/profile/Gabriele-Fabio/publication/327298148/figure/fig1/AS:694557620166912@1542033290926/74HC14-IC-NOT-Gate-Diagram.png" alt="74HC14 IC"></td>
         </tr>
         <tr>
             <td>AND</td>
@@ -76,8 +80,8 @@
                     <tr><td>1</td><td>1</td><td>1</td></tr>
                 </table>
             </td>
-            <td><img src="AND gate.jpeg" alt="AND Gate"></td>
-            <td><img src="AND_IC_NB.png" alt="74HC08 IC"></td>
+            <td><img class="logic-diagram" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/AND_ANSI_Labelled.svg/1200px-AND_ANSI_Labelled.svg.png" alt="AND Gate"></td>
+            <td><img class="ic-representation" src="AND_IC_NB.png" alt="74HC08 IC"></td>
         </tr>
         <tr>
             <td>NAND</td>
@@ -91,8 +95,8 @@
                     <tr><td>1</td><td>1</td><td>0</td></tr>
                 </table>
             </td>
-            <td><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/NAND_ANSI_Labelled.svg/1200px-NAND_ANSI_Labelled.svg.png" alt="NAND Gate"></td>
-            <td><img src="https://www.researchgate.net/profile/Gabriele-Fabio/publication/327298148/figure/fig1/AS:694557620166912@1542033290926/74HC20-IC-NAND-Gate-Diagram.png" alt="74HC20 IC"></td>
+            <td><img class="logic-diagram" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/NAND_ANSI_Labelled.svg/1200px-NAND_ANSI_Labelled.svg.png" alt="NAND Gate"></td>
+            <td><img class="ic-representation" src="https://www.researchgate.net/profile/Gabriele-Fabio/publication/327298148/figure/fig1/AS:694557620166912@1542033290926/74HC20-IC-NAND-Gate-Diagram.png" alt="74HC20 IC"></td>
         </tr>
         <tr>
             <td>OR</td>
@@ -106,8 +110,8 @@
                     <tr><td>1</td><td>1</td><td>1</td></tr>
                 </table>
             </td>
-            <td><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/OR_ANSI_Labelled.svg/1200px-OR_ANSI_Labelled.svg.png" alt="OR Gate"></td>
-            <td><img src="https://www.researchgate.net/profile/Gabriele-Fabio/publication/327298148/figure/fig1/AS:694557620166912@1542033290926/74HC32-IC-OR-Gate-Diagram.png" alt="74HC32 IC"></td>
+            <td><img class="logic-diagram" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/OR_ANSI_Labelled.svg/1200px-OR_ANSI_Labelled.svg.png" alt="OR Gate"></td>
+            <td><img class="ic-representation" src="https://www.researchgate.net/profile/Gabriele-Fabio/publication/327298148/figure/fig1/AS:694557620166912@1542033290926/74HC32-IC-OR-Gate-Diagram.png" alt="74HC32 IC"></td>
         </tr>
         <tr>
             <td>NOR</td>
@@ -121,8 +125,8 @@
                     <tr><td>1</td><td>1</td><td>0</td></tr>
                 </table>
             </td>
-            <td><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/NOR_ANSI_Labelled.svg/1200px-NOR_ANSI_Labelled.svg.png" alt="NOR Gate"></td>
-            <td><img src="https://www.researchgate.net/profile/Gabriele-Fabio/publication/327298148/figure/fig1/AS:694557620166912@1542033290926/74HC02-IC-NOR-Gate-Diagram.png" alt="74HC02 IC"></td>
+            <td><img class="logic-diagram" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/NOR_ANSI_Labelled.svg/1200px-NOR_ANSI_Labelled.svg.png" alt="NOR Gate"></td>
+            <td><img class="ic-representation" src="https://www.researchgate.net/profile/Gabriele-Fabio/publication/327298148/figure/fig1/AS:694557620166912@1542033290926/74HC02-IC-NOR-Gate-Diagram.png" alt="74HC02 IC"></td>
         </tr>
         <tr>
             <td>XOR</td>
@@ -136,8 +140,8 @@
                     <tr><td>1</td><td>1</td><td>0</td></tr>
                 </table>
             </td>
-            <td><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/XOR_ANSI_Labelled.svg/1200px-XOR_ANSI_Labelled.svg.png" alt="XOR Gate"></td>
-            <td><img src="https://www.researchgate.net/profile/Gabriele-Fabio/publication/327298148/figure/fig1/AS:694557620166912@1542033290926/74HC86-IC-XOR-Gate-Diagram.png" alt="74HC86 IC"></td>
+            <td><img class="logic-diagram" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/XOR_ANSI_Labelled.svg/1200px-XOR_ANSI_Labelled.svg.png" alt="XOR Gate"></td>
+            <td><img class="ic-representation" src="https://www.researchgate.net/profile/Gabriele-Fabio/publication/327298148/figure/fig1/AS:694557620166912@1542033290926/74HC86-IC-XOR-Gate-Diagram.png" alt="74HC86 IC"></td>
         </tr>
         <tr>
             <td>XNOR</td>
@@ -151,8 +155,8 @@
                     <tr><td>1</td><td>1</td><td>1</td></tr>
                 </table>
             </td>
-            <td><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/XNOR_ANSI_Labelled.svg/1200px-XNOR_ANSI_Labelled.svg.png" alt="XNOR Gate"></td>
-            <td><img src="https://www.researchgate.net/profile/Gabriele-Fabio/publication/327298148/figure/fig1/AS:694557620166912@1542033290926/74HC26-IC-XNOR-Gate-Diagram.png" alt="74HC26 IC"></td>
+            <td><img class="logic-diagram" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/XNOR_ANSI_Labelled.svg/1200px-XNOR_ANSI_Labelled.svg.png" alt="XNOR Gate"></td>
+            <td><img class="ic-representation" src="https://www.researchgate.net/profile/Gabriele-Fabio/publication/327298148/figure/fig1/AS:694557620166912@1542033290926/74HC26-IC-XNOR-Gate-Diagram.png" alt="74HC26 IC"></td>
         </tr>
     </tbody>
 </table>
