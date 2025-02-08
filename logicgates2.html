@@ -105,11 +105,40 @@
         .reset-button:hover {
             background-color: #0056b3;
         }
+        .map-key {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+        }
+        .map-item {
+            display: flex;
+            align-items: center;
+            margin: 0 20px;
+        }
+        .color-box {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #ccc;
+            border-radius: 2px;
+            margin-right: 5px;
+        }
     </style>
 </head>
 <body>
 
 <h1>Interactive Logic Gates</h1>
+
+<div class="map-key">
+    <div class="map-item">
+        <div class="color-box" style="background-color: #007BFF;"></div>
+        <span>Blue = 0</span>
+    </div>
+    <div class="map-item">
+        <div class="color-box" style="background-color: #FF0000;"></div>
+        <span>Red = 1</span>
+    </div>
+</div>
 
 <button class="reset-button" onclick="resetInputs()">Reset</button>
 
@@ -127,7 +156,7 @@
     <tbody>
         <tr>
             <td class="bold">NOT</td>
-            <td class="bold"> Y = <span style="text-decoration: overline;">A</span></td>
+            <td class="bold"><span style="text-decoration: overline;">Y</span> = A</td>
             <td>
                 <div class="input-container">
                     <div class="switches-container">
@@ -172,7 +201,7 @@
         </tr>
         <tr>
             <td class="bold">NAND</td>
-            <td class="bold">Y = <span style="text-decoration: overline;">(A . B)</span> </td>
+            <td class="bold">Y = ¬(A . B)</td>
             <td>
                 <div class="input-container">
                     <div class="switches-container">
@@ -220,7 +249,7 @@
         </tr>
         <tr>
             <td class="bold">NOR</td>
-            <td class="bold">Y = <span style="text-decoration: overline;">(A + B)</span> </td>
+            <td class="bold">Y = ¬(A + B)</td>
             <td>
                 <div class="input-container">
                     <div class="switches-container">
@@ -268,7 +297,7 @@
         </tr>
         <tr>
             <td class="bold">XNOR</td>
-            <td class="bold">Y = <span style="text-decoration: overline;">(A ⊕ B)</span></td>
+            <td class="bold">Y = ¬(A ⊕ B)</td>
             <td>
                 <div class="input-container">
                     <div class="switches-container">
