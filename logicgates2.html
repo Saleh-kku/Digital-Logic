@@ -30,10 +30,6 @@
             background-color: #007BFF;
             color: white;
         }
-        .logic-diagram {
-            width: 150px; /* Fixed width for logic diagrams */
-            height: auto; /* Maintain aspect ratio */
-        }
         .ic-representation {
             width: 300px; /* Fixed width for IC representations */
             height: auto; /* Maintain aspect ratio */
@@ -43,32 +39,68 @@
         }
         .input-container {
             display: flex;
-            justify-content: center;
-            align-items: center;
+            flex-direction: column; /* Stack elements vertically */
+            align-items: center; /* Center align items */
         }
-        .input-container input {
-            width: 30px;
-            height: 30px;
-            margin: 0 5px;
+        .toggle {
+            appearance: none;
+            width: 40px;
+            height: 20px;
+            background: #ccc;
+            border-radius: 20px;
+            position: relative;
+            outline: none;
+            cursor: pointer;
+            margin-bottom: 75px; /* Space between toggles */
+            transition: background 0.3s;
+        }
+        .toggle:checked {
+            background: #4CAF50;
+        }
+        .toggle:before {
+            content: '';
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            top: 1px;
+            left: 1px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+        .toggle:checked:before {
+            transform: translateX(20px);
         }
         .output {
             font-weight: bold;
             color: green;
+            transition: color 0.3s;
         }
-        .gate-layout {
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .output.red {
+            color: red;
         }
-        .gate-layout img {
-            margin: 0 10px;
-            width: 50px; /* Adjust width for gate layout images */
+        .reset-button {
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: block;
+            width: 150px;
+        }
+        .reset-button:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
 
 <h1>Interactive Logic Gates</h1>
+
+<button class="reset-button" onclick="resetInputs()">Reset</button>
 
 <table>
     <thead>
@@ -77,7 +109,7 @@
             <th class="bold">Equation</th>
             <th>Input</th>
             <th>Output</th>
-            <th>Logic Diagram</th>
+            <th>Truth Table</th>
             <th>IC Representation</th>
         </tr>
     </thead>
@@ -87,13 +119,18 @@
             <td class="bold"><span style="text-decoration: overline;">Y</span> = A</td>
             <td>
                 <div class="input-container">
-                    <img src="NOT_NB.png" alt="NOT Gate" class="logic-diagram">
-                    <input type="checkbox" id="notInput" onchange="updateOutput('NOT')">
+                    <input type="checkbox" class="toggle" id="notInput" onchange="updateOutput('NOT')">
                     <label for="notInput">A</label>
                 </div>
             </td>
             <td class="output" id="notOutput">1</td>
-            <td><img class="logic-diagram" src="NOT_NB.png" alt="NOT Gate"></td>
+            <td>
+                <table>
+                    <tr><td>A</td><td>Y</td></tr>
+                    <tr><td>0</td><td>1</td></tr>
+                    <tr><td>1</td><td>0</td></tr>
+                </table>
+            </td>
             <td><img class="ic-representation" src="NOT_IC_NB.png" alt="74HC14 IC"></td>
         </tr>
         <tr>
@@ -101,15 +138,22 @@
             <td class="bold">Y = A . B</td>
             <td>
                 <div class="input-container">
-                    <img src="AND_NB.png" alt="AND Gate" class="logic-diagram">
-                    <input type="checkbox" id="andInputA" onchange="updateOutput('AND')">
+                    <input type="checkbox" class="toggle" id="andInputA" onchange="updateOutput('AND')">
                     <label for="andInputA">A</label>
-                    <input type="checkbox" id="andInputB" onchange="updateOutput('AND')">
+                    <input type="checkbox" class="toggle" id="andInputB" onchange="updateOutput('AND')">
                     <label for="andInputB">B</label>
                 </div>
             </td>
             <td class="output" id="andOutput">0</td>
-            <td><img class="logic-diagram" src="AND_NB.png" alt="AND Gate"></td>
+            <td>
+                <table>
+                    <tr><td>A</td><td>B</td><td>Y</td></tr>
+                    <tr><td>0</td><td>0</td><td>0</td></tr>
+                    <tr><td>0</td><td>1</td><td>0</td></tr>
+                    <tr><td>1</td><td>0</td><td>0</td></tr>
+                    <tr><td>1</td><td>1</td><td>1</td></tr>
+                </table>
+            </td>
             <td><img class="ic-representation" src="AND_IC_NB.png" alt="74HC08 IC"></td>
         </tr>
         <tr>
@@ -117,15 +161,22 @@
             <td class="bold">Y = ¬(A . B)</td>
             <td>
                 <div class="input-container">
-                    <img src="NAND_NB.png" alt="NAND Gate" class="logic-diagram">
-                    <input type="checkbox" id="nandInputA" onchange="updateOutput('NAND')">
+                    <input type="checkbox" class="toggle" id="nandInputA" onchange="updateOutput('NAND')">
                     <label for="nandInputA">A</label>
-                    <input type="checkbox" id="nandInputB" onchange="updateOutput('NAND')">
+                    <input type="checkbox" class="toggle" id="nandInputB" onchange="updateOutput('NAND')">
                     <label for="nandInputB">B</label>
                 </div>
             </td>
             <td class="output" id="nandOutput">1</td>
-            <td><img class="logic-diagram" src="NAND_NB.png" alt="NAND Gate"></td>
+            <td>
+                <table>
+                    <tr><td>A</td><td>B</td><td>Y</td></tr>
+                    <tr><td>0</td><td>0</td><td>1</td></tr>
+                    <tr><td>0</td><td>1</td><td>1</td></tr>
+                    <tr><td>1</td><td>0</td><td>1</td></tr>
+                    <tr><td>1</td><td>1</td><td>0</td></tr>
+                </table>
+            </td>
             <td><img class="ic-representation" src="NAND_IC_NB.png" alt="74HC20 IC"></td>
         </tr>
         <tr>
@@ -133,15 +184,22 @@
             <td class="bold">Y = A + B</td>
             <td>
                 <div class="input-container">
-                    <img src="OR_NB.png" alt="OR Gate" class="logic-diagram">
-                    <input type="checkbox" id="orInputA" onchange="updateOutput('OR')">
+                    <input type="checkbox" class="toggle" id="orInputA" onchange="updateOutput('OR')">
                     <label for="orInputA">A</label>
-                    <input type="checkbox" id="orInputB" onchange="updateOutput('OR')">
+                    <input type="checkbox" class="toggle" id="orInputB" onchange="updateOutput('OR')">
                     <label for="orInputB">B</label>
                 </div>
             </td>
             <td class="output" id="orOutput">0</td>
-            <td><img class="logic-diagram" src="OR_NB.png" alt="OR Gate"></td>
+            <td>
+                <table>
+                    <tr><td>A</td><td>B</td><td>Y</td></tr>
+                    <tr><td>0</td><td>0</td><td>0</td></tr>
+                    <tr><td>0</td><td>1</td><td>1</td></tr>
+                    <tr><td>1</td><td>0</td><td>1</td></tr>
+                    <tr><td>1</td><td>1</td><td>1</td></tr>
+                </table>
+            </td>
             <td><img class="ic-representation" src="OR_IC_NB.png" alt="74HC32 IC"></td>
         </tr>
         <tr>
@@ -149,15 +207,22 @@
             <td class="bold">Y = ¬(A + B)</td>
             <td>
                 <div class="input-container">
-                    <img src="NOR_NB.png" alt="NOR Gate" class="logic-diagram">
-                    <input type="checkbox" id="norInputA" onchange="updateOutput('NOR')">
+                    <input type="checkbox" class="toggle" id="norInputA" onchange="updateOutput('NOR')">
                     <label for="norInputA">A</label>
-                    <input type="checkbox" id="norInputB" onchange="updateOutput('NOR')">
+                    <input type="checkbox" class="toggle" id="norInputB" onchange="updateOutput('NOR')">
                     <label for="norInputB">B</label>
                 </div>
             </td>
             <td class="output" id="norOutput">1</td>
-            <td><img class="logic-diagram" src="NOR_NB.png" alt="NOR Gate"></td>
+            <td>
+                <table>
+                    <tr><td>A</td><td>B</td><td>Y</td></tr>
+                    <tr><td>0</td><td>0</td><td>1</td></tr>
+                    <tr><td>0</td><td>1</td><td>0</td></tr>
+                    <tr><td>1</td><td>0</td><td>0</td></tr>
+                    <tr><td>1</td><td>1</td><td>0</td></tr>
+                </table>
+            </td>
             <td><img class="ic-representation" src="NOR_IC_NB.png" alt="74HC02 IC"></td>
         </tr>
         <tr>
@@ -165,15 +230,22 @@
             <td class="bold">Y = A ⊕ B</td>
             <td>
                 <div class="input-container">
-                    <img src="XOR_NB.png" alt="XOR Gate" class="logic-diagram">
-                    <input type="checkbox" id="xorInputA" onchange="updateOutput('XOR')">
+                    <input type="checkbox" class="toggle" id="xorInputA" onchange="updateOutput('XOR')">
                     <label for="xorInputA">A</label>
-                    <input type="checkbox" id="xorInputB" onchange="updateOutput('XOR')">
+                    <input type="checkbox" class="toggle" id="xorInputB" onchange="updateOutput('XOR')">
                     <label for="xorInputB">B</label>
                 </div>
             </td>
             <td class="output" id="xorOutput">0</td>
-            <td><img class="logic-diagram" src="XOR_NB.png" alt="XOR Gate"></td>
+            <td>
+                <table>
+                    <tr><td>A</td><td>B</td><td>Y</td></tr>
+                    <tr><td>0</td><td>0</td><td>0</td></tr>
+                    <tr><td>0</td><td>1</td><td>1</td></tr>
+                    <tr><td>1</td><td>0</td><td>1</td></tr>
+                    <tr><td>1</td><td>1</td><td>0</td></tr>
+                </table>
+            </td>
             <td><img class="ic-representation" src="XOR_IC_NB.png" alt="74HC86 IC"></td>
         </tr>
         <tr>
@@ -181,15 +253,22 @@
             <td class="bold">Y = ¬(A ⊕ B)</td>
             <td>
                 <div class="input-container">
-                    <img src="XNOR_NB.png" alt="XNOR Gate" class="logic-diagram">
-                    <input type="checkbox" id="xnorInputA" onchange="updateOutput('XNOR')">
+                    <input type="checkbox" class="toggle" id="xnorInputA" onchange="updateOutput('XNOR')">
                     <label for="xnorInputA">A</label>
-                    <input type="checkbox" id="xnorInputB" onchange="updateOutput('XNOR')">
+                    <input type="checkbox" class="toggle" id="xnorInputB" onchange="updateOutput('XNOR')">
                     <label for="xnorInputB">B</label>
                 </div>
             </td>
             <td class="output" id="xnorOutput">1</td>
-            <td><img class="logic-diagram" src="XNOR_NB.png" alt="XNOR Gate"></td>
+            <td>
+                <table>
+                    <tr><td>A</td><td>B</td><td>Y</td></tr>
+                    <tr><td>0</td><td>0</td><td>1</td></tr>
+                    <tr><td>0</td><td>1</td><td>0</td></tr>
+                    <tr><td>1</td><td>0</td><td>0</td></tr>
+                    <tr><td>1</td><td>1</td><td>1</td></tr>
+                </table>
+            </td>
             <td><img class="ic-representation" src="XNOR_IC_NB.png" alt="74HC26 IC"></td>
         </tr>
     </tbody>
@@ -202,44 +281,61 @@
             case 'NOT':
                 output = document.getElementById('notInput').checked ? 0 : 1;
                 document.getElementById('notOutput').innerText = output;
+                document.getElementById('notOutput').className = output === 1 ? 'output' : 'output red';
                 break;
             case 'AND':
                 const andA = document.getElementById('andInputA').checked ? 1 : 0;
                 const andB = document.getElementById('andInputB').checked ? 1 : 0;
                 output = andA && andB ? 1 : 0;
                 document.getElementById('andOutput').innerText = output;
+                document.getElementById('andOutput').className = output === 1 ? 'output' : 'output red';
                 break;
             case 'NAND':
                 const nandA = document.getElementById('nandInputA').checked ? 1 : 0;
                 const nandB = document.getElementById('nandInputB').checked ? 1 : 0;
                 output = !(nandA && nandB) ? 1 : 0;
                 document.getElementById('nandOutput').innerText = output;
+                document.getElementById('nandOutput').className = output === 1 ? 'output' : 'output red';
                 break;
             case 'OR':
                 const orA = document.getElementById('orInputA').checked ? 1 : 0;
                 const orB = document.getElementById('orInputB').checked ? 1 : 0;
                 output = orA || orB ? 1 : 0;
                 document.getElementById('orOutput').innerText = output;
+                document.getElementById('orOutput').className = output === 1 ? 'output' : 'output red';
                 break;
             case 'NOR':
                 const norA = document.getElementById('norInputA').checked ? 1 : 0;
                 const norB = document.getElementById('norInputB').checked ? 1 : 0;
                 output = !(norA || norB) ? 1 : 0;
                 document.getElementById('norOutput').innerText = output;
+                document.getElementById('norOutput').className = output === 1 ? 'output' : 'output red';
                 break;
             case 'XOR':
                 const xorA = document.getElementById('xorInputA').checked ? 1 : 0;
                 const xorB = document.getElementById('xorInputB').checked ? 1 : 0;
                 output = (xorA ^ xorB) ? 1 : 0;
                 document.getElementById('xorOutput').innerText = output;
+                document.getElementById('xorOutput').className = output === 1 ? 'output' : 'output red';
                 break;
             case 'XNOR':
                 const xnorA = document.getElementById('xnorInputA').checked ? 1 : 0;
                 const xnorB = document.getElementById('xnorInputB').checked ? 1 : 0;
                 output = !(xnorA ^ xnorB) ? 1 : 0;
                 document.getElementById('xnorOutput').innerText = output;
+                document.getElementById('xnorOutput').className = output === 1 ? 'output' : 'output red';
                 break;
         }
+    }
+
+    function resetInputs() {
+        const inputs = document.querySelectorAll('.toggle');
+        inputs.forEach(input => input.checked = false);
+        const outputs = document.querySelectorAll('.output');
+        outputs.forEach(output => {
+            output.innerText = '0';
+            output.className = 'output red';
+        });
     }
 </script>
 
