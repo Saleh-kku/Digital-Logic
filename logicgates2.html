@@ -30,6 +30,10 @@
             background-color: #007BFF;
             color: white;
         }
+        .input-image {
+            width: 150px; /* Set input images width */
+            height: auto; /* Maintain aspect ratio */
+        }
         .ic-representation {
             width: 250px; /* Set IC representation width */
             height: auto; /* Maintain aspect ratio */
@@ -125,7 +129,7 @@
                     <div class="switches-container">
                         <input type="checkbox" class="toggle" id="notInput" onchange="updateOutput('NOT')">
                     </div>
-                    <img src="NOT_NB.png" alt="NOT Gate" class="ic-representation">
+                    <img src="NOT_NB.png" alt="NOT Gate" class="input-image">
                 </div>
             </td>
             <td class="output" id="notOutput">1</td>
@@ -147,7 +151,7 @@
                         <input type="checkbox" class="toggle" id="andInputA" onchange="updateOutput('AND')">
                         <input type="checkbox" class="toggle" id="andInputB" onchange="updateOutput('AND')">
                     </div>
-                    <img src="AND_NB.png" alt="AND Gate" class="ic-representation">
+                    <img src="AND_NB.png" alt="AND Gate" class="input-image">
                 </div>
             </td>
             <td class="output" id="andOutput">0</td>
@@ -171,7 +175,7 @@
                         <input type="checkbox" class="toggle" id="nandInputA" onchange="updateOutput('NAND')">
                         <input type="checkbox" class="toggle" id="nandInputB" onchange="updateOutput('NAND')">
                     </div>
-                    <img src="NAND_NB.png" alt="NAND Gate" class="ic-representation">
+                    <img src="NAND_NB.png" alt="NAND Gate" class="input-image">
                 </div>
             </td>
             <td class="output" id="nandOutput">1</td>
