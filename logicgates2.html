@@ -31,7 +31,7 @@
             color: white;
         }
         .ic-representation {
-            width: 150px; /* Fixed width for IC representations */
+            width: 250px; /* Set IC representation width */
             height: auto; /* Maintain aspect ratio */
         }
         .bold {
@@ -39,8 +39,7 @@
         }
         .input-container {
             display: flex;
-            align-items: flex-start; /* Align items to the top */
-            justify-content: center; /* Center the image horizontally */
+            align-items: center; /* Align items vertically */
         }
         .toggle {
             appearance: none;
@@ -51,7 +50,7 @@
             position: relative;
             outline: none;
             cursor: pointer;
-            margin: 5px 10px 0 0; /* Space between toggle and image */
+            margin-right: 10px; /* Space between toggle and image */
         }
         .toggle:checked {
             background: #4CAF50;
@@ -137,11 +136,9 @@
             <td class="bold">Y = A . B</td>
             <td>
                 <div class="input-container">
-                    <div>
-                        <input type="checkbox" class="toggle" id="andInputA" onchange="updateOutput('AND')">
-                        <input type="checkbox" class="toggle" id="andInputB" onchange="updateOutput('AND')">
-                    </div>
+                    <input type="checkbox" class="toggle" id="andInputA" onchange="updateOutput('AND')">
                     <img src="AND_NB.png" alt="AND Gate" class="ic-representation">
+                    <input type="checkbox" class="toggle" id="andInputB" onchange="updateOutput('AND')">
                 </div>
             </td>
             <td class="output" id="andOutput">0</td>
@@ -161,11 +158,9 @@
             <td class="bold">Y = ¬(A . B)</td>
             <td>
                 <div class="input-container">
-                    <div>
-                        <input type="checkbox" class="toggle" id="nandInputA" onchange="updateOutput('NAND')">
-                        <input type="checkbox" class="toggle" id="nandInputB" onchange="updateOutput('NAND')">
-                    </div>
+                    <input type="checkbox" class="toggle" id="nandInputA" onchange="updateOutput('NAND')">
                     <img src="NAND_NB.png" alt="NAND Gate" class="ic-representation">
+                    <input type="checkbox" class="toggle" id="nandInputB" onchange="updateOutput('NAND')">
                 </div>
             </td>
             <td class="output" id="nandOutput">1</td>
@@ -185,11 +180,9 @@
             <td class="bold">Y = A + B</td>
             <td>
                 <div class="input-container">
-                    <div>
-                        <input type="checkbox" class="toggle" id="orInputA" onchange="updateOutput('OR')">
-                        <input type="checkbox" class="toggle" id="orInputB" onchange="updateOutput('OR')">
-                    </div>
+                    <input type="checkbox" class="toggle" id="orInputA" onchange="updateOutput('OR')">
                     <img src="OR_NB.png" alt="OR Gate" class="ic-representation">
+                    <input type="checkbox" class="toggle" id="orInputB" onchange="updateOutput('OR')">
                 </div>
             </td>
             <td class="output" id="orOutput">0</td>
@@ -209,11 +202,9 @@
             <td class="bold">Y = ¬(A + B)</td>
             <td>
                 <div class="input-container">
-                    <div>
-                        <input type="checkbox" class="toggle" id="norInputA" onchange="updateOutput('NOR')">
-                        <input type="checkbox" class="toggle" id="norInputB" onchange="updateOutput('NOR')">
-                    </div>
+                    <input type="checkbox" class="toggle" id="norInputA" onchange="updateOutput('NOR')">
                     <img src="NOR_NB.png" alt="NOR Gate" class="ic-representation">
+                    <input type="checkbox" class="toggle" id="norInputB" onchange="updateOutput('NOR')">
                 </div>
             </td>
             <td class="output" id="norOutput">1</td>
@@ -233,11 +224,9 @@
             <td class="bold">Y = A ⊕ B</td>
             <td>
                 <div class="input-container">
-                    <div>
-                        <input type="checkbox" class="toggle" id="xorInputA" onchange="updateOutput('XOR')">
-                        <input type="checkbox" class="toggle" id="xorInputB" onchange="updateOutput('XOR')">
-                    </div>
+                    <input type="checkbox" class="toggle" id="xorInputA" onchange="updateOutput('XOR')">
                     <img src="XOR_NB.png" alt="XOR Gate" class="ic-representation">
+                    <input type="checkbox" class="toggle" id="xorInputB" onchange="updateOutput('XOR')">
                 </div>
             </td>
             <td class="output" id="xorOutput">0</td>
@@ -257,11 +246,9 @@
             <td class="bold">Y = ¬(A ⊕ B)</td>
             <td>
                 <div class="input-container">
-                    <div>
-                        <input type="checkbox" class="toggle" id="xnorInputA" onchange="updateOutput('XNOR')">
-                        <input type="checkbox" class="toggle" id="xnorInputB" onchange="updateOutput('XNOR')">
-                    </div>
+                    <input type="checkbox" class="toggle" id="xnorInputA" onchange="updateOutput('XNOR')">
                     <img src="XNOR_NB.png" alt="XNOR Gate" class="ic-representation">
+                    <input type="checkbox" class="toggle" id="xnorInputB" onchange="updateOutput('XNOR')">
                 </div>
             </td>
             <td class="output" id="xnorOutput">1</td>
