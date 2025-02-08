@@ -49,10 +49,19 @@
             border-radius: 2px;
             margin-right: 5px;
         }
-        .gate-details {
-            display: none; /* Initially hidden */
-            margin-top: 20px;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
             text-align: center;
+        }
+        th {
+            background-color: #007BFF;
+            color: white;
         }
         .input-image {
             width: 150px; /* Set input images width */
@@ -92,7 +101,7 @@
 
 <button class="reset-button" onclick="resetInputs()">Reset</button>
 
-<select id="gateSelector" onchange="showGateDetails(this.value)">
+<select id="gateSelector" onchange="updateGateDetails()">
     <option value="">Select a Logic Gate</option>
     <option value="NOT">NOT</option>
     <option value="AND">AND</option>
@@ -103,170 +112,182 @@
     <option value="XNOR">XNOR</option>
 </select>
 
-<div id="gateDetails" class="gate-details">
-    <div id="detailsContent"></div>
-</div>
+<table id="gateTable">
+    <thead>
+        <tr>
+            <th class="bold">Gate</th>
+            <th class="bold">Equation</th>
+            <th>Input</th>
+            <th>Output</th>
+            <th>Truth Table</th>
+            <th>IC Representation</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr id="gateRow" style="display:none;">
+            <td class="bold" id="gateName"></td>
+            <td class="bold" id="gateEquation"></td>
+            <td id="gateInput"></td>
+            <td class="output blue" id="gateOutput">0</td>
+            <td id="gateTruthTable"></td>
+            <td id="gateIC"></td>
+        </tr>
+    </tbody>
+</table>
 
 <script>
-    function showGateDetails(gate) {
-        const detailsContent = document.getElementById('detailsContent');
-        const gateDetails = document.getElementById('gateDetails');
+    function updateGateDetails() {
+        const gate = document.getElementById('gateSelector').value;
+        const gateRow = document.getElementById('gateRow');
+        const gateName = document.getElementById('gateName');
+        const gateEquation = document.getElementById('gateEquation');
+        const gateInput = document.getElementById('gateInput');
+        const gateOutput = document.getElementById('gateOutput');
+        const gateTruthTable = document.getElementById('gateTruthTable');
+        const gateIC = document.getElementById('gateIC');
 
         if (gate === "") {
-            gateDetails.style.display = 'none';
+            gateRow.style.display = 'none';
             return;
         }
 
-        let htmlContent = '';
+        let inputHTML = '';
+        let truthHTML = '';
+        let equation = '';
+        let icSrc = '';
         switch (gate) {
             case 'NOT':
-                htmlContent = `
-                    <h2>NOT Gate</h2>
+                inputHTML = `
                     <div>
-                        <div>
-                            <input type="checkbox" class="toggle" id="notInput" onchange="updateOutput('NOT')">
-                            <img src="NOT_NB.png" alt="NOT Gate" class="input-image">
-                        </div>
-                        <div class="output blue" id="notOutput">0</div>
-                    </div>
+                        <input type="checkbox" class="toggle" id="notInput" onchange="updateOutput('NOT')">
+                        <img src="NOT_NB.png" alt="NOT Gate" class="input-image">
+                    </div>`;
+                equation = 'Y = ¬A';
+                truthHTML = `
                     <table>
                         <tr><td>A</td><td>Y</td></tr>
                         <tr><td>0</td><td>1</td></tr>
                         <tr><td>1</td><td>0</td></tr>
-                    </table>
-                    <img class="ic-representation" src="NOT_IC_NB.png" alt="74HC14 IC">
-                `;
+                    </table>`;
+                icSrc = 'NOT_IC_NB.png';
                 break;
             case 'AND':
-                htmlContent = `
-                    <h2>AND Gate</h2>
+                inputHTML = `
                     <div>
-                        <div>
-                            <input type="checkbox" class="toggle" id="andInputA" onchange="updateOutput('AND')">
-                            <input type="checkbox" class="toggle" id="andInputB" onchange="updateOutput('AND')">
-                            <img src="AND_NB.png" alt="AND Gate" class="input-image">
-                        </div>
-                        <div class="output blue" id="andOutput">0</div>
-                    </div>
+                        <input type="checkbox" class="toggle" id="andInputA" onchange="updateOutput('AND')">
+                        <input type="checkbox" class="toggle" id="andInputB" onchange="updateOutput('AND')">
+                        <img src="AND_NB.png" alt="AND Gate" class="input-image">
+                    </div>`;
+                equation = 'Y = A . B';
+                truthHTML = `
                     <table>
                         <tr><td>A</td><td>B</td><td>Y</td></tr>
                         <tr><td>0</td><td>0</td><td>0</td></tr>
                         <tr><td>0</td><td>1</td><td>0</td></tr>
                         <tr><td>1</td><td>0</td><td>0</td></tr>
                         <tr><td>1</td><td>1</td><td>1</td></tr>
-                    </table>
-                    <img class="ic-representation" src="AND_IC_NB.png" alt="74HC08 IC">
-                `;
+                    </table>`;
+                icSrc = 'AND_IC_NB.png';
                 break;
             case 'NAND':
-                htmlContent = `
-                    <h2>NAND Gate</h2>
+                inputHTML = `
                     <div>
-                        <div>
-                            <input type="checkbox" class="toggle" id="nandInputA" onchange="updateOutput('NAND')">
-                            <input type="checkbox" class="toggle" id="nandInputB" onchange="updateOutput('NAND')">
-                            <img src="NAND_NB.png" alt="NAND Gate" class="input-image">
-                        </div>
-                        <div class="output blue" id="nandOutput">0</div>
-                    </div>
+                        <input type="checkbox" class="toggle" id="nandInputA" onchange="updateOutput('NAND')">
+                        <input type="checkbox" class="toggle" id="nandInputB" onchange="updateOutput('NAND')">
+                        <img src="NAND_NB.png" alt="NAND Gate" class="input-image">
+                    </div>`;
+                equation = 'Y = ¬(A . B)';
+                truthHTML = `
                     <table>
                         <tr><td>A</td><td>B</td><td>Y</td></tr>
                         <tr><td>0</td><td>0</td><td>1</td></tr>
                         <tr><td>0</td><td>1</td><td>1</td></tr>
                         <tr><td>1</td><td>0</td><td>1</td></tr>
                         <tr><td>1</td><td>1</td><td>0</td></tr>
-                    </table>
-                    <img class="ic-representation" src="NAND_IC_NB.png" alt="74HC20 IC">
-                `;
+                    </table>`;
+                icSrc = 'NAND_IC_NB.png';
                 break;
             case 'OR':
-                htmlContent = `
-                    <h2>OR Gate</h2>
+                inputHTML = `
                     <div>
-                        <div>
-                            <input type="checkbox" class="toggle" id="orInputA" onchange="updateOutput('OR')">
-                            <input type="checkbox" class="toggle" id="orInputB" onchange="updateOutput('OR')">
-                            <img src="OR_NB.png" alt="OR Gate" class="input-image">
-                        </div>
-                        <div class="output blue" id="orOutput">0</div>
-                    </div>
+                        <input type="checkbox" class="toggle" id="orInputA" onchange="updateOutput('OR')">
+                        <input type="checkbox" class="toggle" id="orInputB" onchange="updateOutput('OR')">
+                        <img src="OR_NB.png" alt="OR Gate" class="input-image">
+                    </div>`;
+                equation = 'Y = A + B';
+                truthHTML = `
                     <table>
                         <tr><td>A</td><td>B</td><td>Y</td></tr>
                         <tr><td>0</td><td>0</td><td>0</td></tr>
                         <tr><td>0</td><td>1</td><td>1</td></tr>
                         <tr><td>1</td><td>0</td><td>1</td></tr>
                         <tr><td>1</td><td>1</td><td>1</td></tr>
-                    </table>
-                    <img class="ic-representation" src="OR_IC_NB.png" alt="74HC32 IC">
-                `;
+                    </table>`;
+                icSrc = 'OR_IC_NB.png';
                 break;
             case 'NOR':
-                htmlContent = `
-                    <h2>NOR Gate</h2>
+                inputHTML = `
                     <div>
-                        <div>
-                            <input type="checkbox" class="toggle" id="norInputA" onchange="updateOutput('NOR')">
-                            <input type="checkbox" class="toggle" id="norInputB" onchange="updateOutput('NOR')">
-                            <img src="NOR_NB.png" alt="NOR Gate" class="input-image">
-                        </div>
-                        <div class="output blue" id="norOutput">0</div>
-                    </div>
+                        <input type="checkbox" class="toggle" id="norInputA" onchange="updateOutput('NOR')">
+                        <input type="checkbox" class="toggle" id="norInputB" onchange="updateOutput('NOR')">
+                        <img src="NOR_NB.png" alt="NOR Gate" class="input-image">
+                    </div>`;
+                equation = 'Y = ¬(A + B)';
+                truthHTML = `
                     <table>
                         <tr><td>A</td><td>B</td><td>Y</td></tr>
                         <tr><td>0</td><td>0</td><td>1</td></tr>
                         <tr><td>0</td><td>1</td><td>0</td></tr>
                         <tr><td>1</td><td>0</td><td>0</td></tr>
                         <tr><td>1</td><td>1</td><td>0</td></tr>
-                    </table>
-                    <img class="ic-representation" src="NOR_IC_NB.png" alt="74HC02 IC">
-                `;
+                    </table>`;
+                icSrc = 'NOR_IC_NB.png';
                 break;
             case 'XOR':
-                htmlContent = `
-                    <h2>XOR Gate</h2>
+                inputHTML = `
                     <div>
-                        <div>
-                            <input type="checkbox" class="toggle" id="xorInputA" onchange="updateOutput('XOR')">
-                            <input type="checkbox" class="toggle" id="xorInputB" onchange="updateOutput('XOR')">
-                            <img src="XOR_NB.png" alt="XOR Gate" class="input-image">
-                        </div>
-                        <div class="output blue" id="xorOutput">0</div>
-                    </div>
+                        <input type="checkbox" class="toggle" id="xorInputA" onchange="updateOutput('XOR')">
+                        <input type="checkbox" class="toggle" id="xorInputB" onchange="updateOutput('XOR')">
+                        <img src="XOR_NB.png" alt="XOR Gate" class="input-image">
+                    </div>`;
+                equation = 'Y = A ⊕ B';
+                truthHTML = `
                     <table>
                         <tr><td>A</td><td>B</td><td>Y</td></tr>
                         <tr><td>0</td><td>0</td><td>0</td></tr>
                         <tr><td>0</td><td>1</td><td>1</td></tr>
                         <tr><td>1</td><td>0</td><td>1</td></tr>
                         <tr><td>1</td><td>1</td><td>0</td></tr>
-                    </table>
-                    <img class="ic-representation" src="XOR_IC_NB.png" alt="74HC86 IC">
-                `;
+                    </table>`;
+                icSrc = 'XOR_IC_NB.png';
                 break;
             case 'XNOR':
-                htmlContent = `
-                    <h2>XNOR Gate</h2>
+                inputHTML = `
                     <div>
-                        <div>
-                            <input type="checkbox" class="toggle" id="xnorInputA" onchange="updateOutput('XNOR')">
-                            <input type="checkbox" class="toggle" id="xnorInputB" onchange="updateOutput('XNOR')">
-                            <img src="XNOR_NB.png" alt="XNOR Gate" class="input-image">
-                        </div>
-                        <div class="output blue" id="xnorOutput">0</div>
-                    </div>
+                        <input type="checkbox" class="toggle" id="xnorInputA" onchange="updateOutput('XNOR')">
+                        <input type="checkbox" class="toggle" id="xnorInputB" onchange="updateOutput('XNOR')">
+                        <img src="XNOR_NB.png" alt="XNOR Gate" class="input-image">
+                    </div>`;
+                equation = 'Y = ¬(A ⊕ B)';
+                truthHTML = `
                     <table>
                         <tr><td>A</td><td>B</td><td>Y</td></tr>
                         <tr><td>0</td><td>0</td><td>1</td></tr>
                         <tr><td>0</td><td>1</td><td>0</td></tr>
                         <tr><td>1</td><td>0</td><td>0</td></tr>
                         <tr><td>1</td><td>1</td><td>1</td></tr>
-                    </table>
-                    <img class="ic-representation" src="XNOR_IC_NB.png" alt="74HC26 IC">
-                `;
+                    </table>`;
+                icSrc = 'XNOR_IC_NB.png';
                 break;
         }
 
-        detailsContent.innerHTML = htmlContent;
-        gateDetails.style.display = 'block'; // Show the details section
+        gateName.innerText = gate;
+        gateEquation.innerText = equation;
+        gateInput.innerHTML = inputHTML;
+        gateOutput.innerText = '0'; // Reset output
+        gateTruthTable.innerHTML = truthHTML;
+        gateIC.innerHTML = `<img class="ic-representation" src="${icSrc}" alt="${gate} IC">`;
+        gateRow.style.display = 'table-row'; // Show the gate row
     }
 
     function updateOutput(gate) {
@@ -274,7 +295,7 @@
         switch (gate) {
             case 'NOT':
                 output = document.getElementById('notInput').checked ? 0 : 1;
-                const notOutput = document.getElementById('notOutput');
+                const notOutput = document.getElementById('gateOutput');
                 notOutput.innerText = output;
                 notOutput.className = output === 1 ? 'output red' : 'output blue';
                 break;
@@ -282,7 +303,7 @@
                 const andA = document.getElementById('andInputA').checked ? 1 : 0;
                 const andB = document.getElementById('andInputB').checked ? 1 : 0;
                 output = andA && andB ? 1 : 0;
-                const andOutput = document.getElementById('andOutput');
+                const andOutput = document.getElementById('gateOutput');
                 andOutput.innerText = output;
                 andOutput.className = output === 1 ? 'output red' : 'output blue';
                 break;
@@ -290,7 +311,7 @@
                 const nandA = document.getElementById('nandInputA').checked ? 1 : 0;
                 const nandB = document.getElementById('nandInputB').checked ? 1 : 0;
                 output = !(nandA && nandB) ? 1 : 0;
-                const nandOutput = document.getElementById('nandOutput');
+                const nandOutput = document.getElementById('gateOutput');
                 nandOutput.innerText = output;
                 nandOutput.className = output === 1 ? 'output red' : 'output blue';
                 break;
@@ -298,7 +319,7 @@
                 const orA = document.getElementById('orInputA').checked ? 1 : 0;
                 const orB = document.getElementById('orInputB').checked ? 1 : 0;
                 output = orA || orB ? 1 : 0;
-                const orOutput = document.getElementById('orOutput');
+                const orOutput = document.getElementById('gateOutput');
                 orOutput.innerText = output;
                 orOutput.className = output === 1 ? 'output red' : 'output blue';
                 break;
@@ -306,7 +327,7 @@
                 const norA = document.getElementById('norInputA').checked ? 1 : 0;
                 const norB = document.getElementById('norInputB').checked ? 1 : 0;
                 output = !(norA || norB) ? 1 : 0;
-                const norOutput = document.getElementById('norOutput');
+                const norOutput = document.getElementById('gateOutput');
                 norOutput.innerText = output;
                 norOutput.className = output === 1 ? 'output red' : 'output blue';
                 break;
@@ -314,7 +335,7 @@
                 const xorA = document.getElementById('xorInputA').checked ? 1 : 0;
                 const xorB = document.getElementById('xorInputB').checked ? 1 : 0;
                 output = (xorA ^ xorB) ? 1 : 0;
-                const xorOutput = document.getElementById('xorOutput');
+                const xorOutput = document.getElementById('gateOutput');
                 xorOutput.innerText = output;
                 xorOutput.className = output === 1 ? 'output red' : 'output blue';
                 break;
@@ -322,7 +343,7 @@
                 const xnorA = document.getElementById('xnorInputA').checked ? 1 : 0;
                 const xnorB = document.getElementById('xnorInputB').checked ? 1 : 0;
                 output = !(xnorA ^ xnorB) ? 1 : 0;
-                const xnorOutput = document.getElementById('xnorOutput');
+                const xnorOutput = document.getElementById('gateOutput');
                 xnorOutput.innerText = output;
                 xnorOutput.className = output === 1 ? 'output red' : 'output blue';
                 break;
@@ -332,12 +353,10 @@
     function resetInputs() {
         const inputs = document.querySelectorAll('.toggle');
         inputs.forEach(input => input.checked = false);
-        const outputs = document.querySelectorAll('.output');
-        outputs.forEach(output => {
-            output.innerText = '0';
-            output.className = 'output blue';
-        });
-        document.getElementById('gateDetails').style.display = 'none'; // Hide details
+        const output = document.getElementById('gateOutput');
+        output.innerText = '0';
+        output.className = 'output blue';
+        document.getElementById('gateRow').style.display = 'none'; // Hide the row
         document.getElementById('gateSelector').value = ""; // Reset dropdown
     }
 </script>
