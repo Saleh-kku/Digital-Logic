@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logic Gates Presentation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .slide {
+            display: none;
+            padding: 20px;
+            text-align: center;
+        }
+        .active {
+            display: block;
+        }
+        .navigation {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+        }
+        button {
+            padding: 10px;
+            margin: 5px;
+            border: none;
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        h1, h2 {
+            margin-bottom: 20px;
+        }
+        table {
+            margin: 0 auto;
+            border-collapse: collapse;
+            width: 80%;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+        img {
+            width: 300px; /* Fixed width for consistency */
+            height: auto; /* Maintain aspect ratio */
+            max-width: 100%; /* Responsive */
+        }
+    </style>
+</head>
+<body>
+
+<div class="navigation">
+    <button onclick="prevSlide()">Previous</button>
+    <button onclick="nextSlide()">Next</button>
+</div>
+
+<div class="slide active">
+    <h1>Introduction to Logic Gates</h1>
+    <p>Logic gates are the building blocks of digital circuits. They perform basic logical functions that are fundamental to digital circuits.</p>
+</div>
+
+<div class="slide">
+    <h2>NOT Gate</h2>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/NOT_ANSI_Labelled.svg/1200px-NOT_ANSI_Labelled.svg.png" alt="NOT Gate Diagram">
+    <h3>Equation</h3>
+    <p>Y = ¬A</p>
+    <h3>Truth Table</h3>
+    <table>
+        <tr>
+            <th>A</th>
+            <th>Y</th>
+        </tr>
+        <tr>
+            <td>0</td>
+            <td>1</td>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>0</td>
+        </tr>
+    </table>
+    <h3>IC Representation</h3>
+    <img src="https://www.researchgate.net/profile/Gabriele-Fabio/publication/327298148/figure/fig1/AS:694557620166912@1542033290926/74HC14-IC-NOT-Gate-Diagram.png" alt="74HC14 IC">
+</div>
+
+<div class="slide">
+    <h2>AND Gate</h2>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/AND_ANSI_Labelled.svg/1200px-AND_ANSI_Labelled.svg.png" alt="AND Gate Diagram">
+    <h3>Equation</h3>
+    <p>Y = A ∧ B</p>
+    <h3>Truth Table</h3>
+    <table>
+        <tr>
+            <th>A</th>
+            <th>B</th>
+            <th>Y</th>
+        </tr>
+        <tr>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>0</td>
+            <td>1</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+        </tr>
+    </table>
+    <h3>IC Representation</h3>
+    <img src="https://www.researchgate.net/profile/Gabriele-Fabio/publication/327298148/figure/fig1/AS:694557620166912@1542033290926/74HC08-IC-AND-Gate-Diagram.png" alt="74HC08 IC">
+</div>
+
+<div class="slide">
+    <h2>NAND Gate</h2>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/NAND_ANSI_Labelled.svg/1200px-NAND_ANSI_Labelled.svg.png" alt="NAND Gate Diagram">
+    <h3>Equation</h3>
+    <p>Y = ¬(A ∧ B)</p>
+    <h3>Truth Table</h3>
+    <table>
+        <tr>
+            <th>A</th>
+            <th>B</th>
+            <th>Y</th>
+        </tr>
+        <tr>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+        </tr>
+        <tr>
+            <td>0</td>
+            <td>1</td>
+            <td>1</td>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>0</td>
+            <td>1</td>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+        </tr>
+    </table>
+    <h3>IC Representation</h3>
+    <img src="https://www.researchgate.net/profile/Gabriele-Fabio/publication/327298148/figure/fig1/AS:694557620166912@1542033290926/74HC20-IC-NAND-Gate-Diagram.png" alt="74HC20 IC">
+</div>
+
+<div class="slide">
+    <h2>OR Gate</h2>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/OR_ANSI_Labelled.svg/1200px-OR_ANSI_Labelled.svg.png" alt="OR Gate Diagram">
+    <h3>Equation</h3>
+    <p>Y = A ∨ B</p>
+    <h3>Truth Table</h3>
+    <table>
+        <tr>
+            <th>A</th>
+            <th>B</th>
+            <th>Y</th>
+        </tr>
+        <tr>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>0</td>
+            <td>1</td>
+            <td>1</td>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>0</td>
+            <td>1</td>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+        </tr>
+    </table>
+    <h3>IC Representation</h3>
+    <img src="https://www.researchgate.net/profile/Gabriele-Fabio/publication/327298148/figure/fig1/AS:694557620166912@1542033290926/74HC32-IC-OR-Gate-Diagram.png" alt="74HC32 IC">
+</div>
+
+<div class="slide">
+    <h2>NOR Gate</h2>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/NOR_ANSI_Labelled.svg/1200px-NOR_ANSI_Labelled.svg.png" alt="NOR Gate Diagram">
+    <h3>Equation</h3>
+    <p>Y = ¬(A ∨ B)</p>
+    <h3>Truth Table</h3>
+    <table>
+        <tr>
+            <th>A</th>
+            <th>B</th>
+            <th>Y</th>
+        </tr>
+        <tr>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+        </tr>
+        <tr>
+            <td>0</td>
+            <td>1</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+        </tr>
+    </table>
+    <h3>IC Representation</h3>
+    <img src="https://www.researchgate.net/profile/Gabriele-Fabio/publication/327298148/figure/fig1/AS:694557620166912@1542033290926/74HC02-IC-NOR-Gate-Diagram.png" alt="74HC02 IC">
+</div>
+
+<div class="slide">
+    <h2>XOR Gate</h2>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/XOR_ANSI_Labelled.svg/1200px-XOR_ANSI_Labelled.svg.png" alt="XOR Gate Diagram">
+    <h3>Equation</h3>
+    <p>Y = A ⊕ B</p>
+    <h3>Truth Table</h3>
+    <table>
+        <tr>
+            <th>A</th>
+            <th>B</th>
+            <th>Y</th>
+        </tr>
+        <tr>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>0</td>
+            <td>1</td>
+            <td>1</td>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>0</td>
+            <td>1</td>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+        </tr>
+    </table>
+    <h3>IC Representation</h3>
+    <img src="https://www.researchgate.net/profile/Gabriele-Fabio/publication/327298148/figure/fig1/AS:694557620166912@1542033290926/74HC86-IC-XOR-Gate-Diagram.png" alt="74HC86 IC">
+</div>
+
+<div class="slide">
+    <h2>XNOR Gate</h2>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/XNOR_ANSI_Labelled.svg/1200px-XNOR_ANSI_Labelled.svg.png" alt="XNOR Gate Diagram">
+    <h3>Equation</h3>
+    <p>Y = ¬(A ⊕ B)</p>
+    <h3>Truth Table</h3>
+    <table>
+        <tr>
+            <th>A</th>
+            <th>B</th>
+            <th>Y</th>
+        </tr>
+        <tr>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+        </tr>
+        <tr>
+            <td>0</td>
+            <td>1</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+        </tr>
+    </table>
+    <h3>IC Representation</h3>
+    <img src="https://www.researchgate.net/profile/Gabriele-Fabio/publication/327298148/figure/fig1/AS:694557620166912@1542033290926/74HC26-IC-XNOR-Gate-Diagram.png" alt="74HC26 IC">
+</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+
+    function showSlide(index) {
+        slides.forEach((slide, i) => {
+            slide.classList.toggle('active', i === index);
+        });
+    }
+
+    function nextSlide() {
+        currentSlide = (currentSlide + 1) % slides.length;
+        showSlide(currentSlide);
+    }
+
+    function prevSlide() {
+        currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+        showSlide(currentSlide);
+    }
+
+    showSlide(currentSlide);
+</script>
+
+</body>
+</html>
