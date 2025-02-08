@@ -55,14 +55,15 @@
             appearance: none;
             width: 40px;
             height: 20px;
-            background: #ccc;
+            background: #007BFF; /* Default blue for 0 */
             border-radius: 20px;
             position: relative;
             outline: none;
             cursor: pointer;
+            transition: background 0.3s;
         }
         .toggle:checked {
-            background: #4CAF50;
+            background: #FF0000; /* Red for 1 */
         }
         .toggle:before {
             content: '';
@@ -80,11 +81,14 @@
         }
         .output {
             font-weight: bold;
-            color: green;
-            transition: color 0.3s;
+            color: white;
+            transition: background-color 0.3s, color 0.3s;
         }
         .output.red {
-            color: red;
+            background-color: #FF0000; /* Red for 1 */
+        }
+        .output.blue {
+            background-color: #007BFF; /* Blue for 0 */
         }
         .reset-button {
             margin: 20px auto;
@@ -132,7 +136,7 @@
                     <img src="NOT_NB.png" alt="NOT Gate" class="input-image">
                 </div>
             </td>
-            <td class="output" id="notOutput">1</td>
+            <td class="output blue" id="notOutput">0</td>
             <td>
                 <table>
                     <tr><td>A</td><td>Y</td></tr>
@@ -154,7 +158,7 @@
                     <img src="AND_NB.png" alt="AND Gate" class="input-image">
                 </div>
             </td>
-            <td class="output" id="andOutput">0</td>
+            <td class="output blue" id="andOutput">0</td>
             <td>
                 <table>
                     <tr><td>A</td><td>B</td><td>Y</td></tr>
@@ -178,7 +182,7 @@
                     <img src="NAND_NB.png" alt="NAND Gate" class="input-image">
                 </div>
             </td>
-            <td class="output" id="nandOutput">1</td>
+            <td class="output blue" id="nandOutput">0</td>
             <td>
                 <table>
                     <tr><td>A</td><td>B</td><td>Y</td></tr>
@@ -199,22 +203,25 @@
         switch (gate) {
             case 'NOT':
                 output = document.getElementById('notInput').checked ? 0 : 1;
-                document.getElementById('notOutput').innerText = output;
-                document.getElementById('notOutput').className = output === 1 ? 'output' : 'output red';
+                const notOutput = document.getElementById('notOutput');
+                notOutput.innerText = output;
+                notOutput.className = output === 1 ? 'output red' : 'output blue';
                 break;
             case 'AND':
                 const andA = document.getElementById('andInputA').checked ? 1 : 0;
                 const andB = document.getElementById('andInputB').checked ? 1 : 0;
                 output = andA && andB ? 1 : 0;
-                document.getElementById('andOutput').innerText = output;
-                document.getElementById('andOutput').className = output === 1 ? 'output' : 'output red';
+                const andOutput = document.getElementById('andOutput');
+                andOutput.innerText = output;
+                andOutput.className = output === 1 ? 'output red' : 'output blue';
                 break;
             case 'NAND':
                 const nandA = document.getElementById('nandInputA').checked ? 1 : 0;
                 const nandB = document.getElementById('nandInputB').checked ? 1 : 0;
                 output = !(nandA && nandB) ? 1 : 0;
-                document.getElementById('nandOutput').innerText = output;
-                document.getElementById('nandOutput').className = output === 1 ? 'output' : 'output red';
+                const nandOutput = document.getElementById('nandOutput');
+                nandOutput.innerText = output;
+                nandOutput.className = output === 1 ? 'output red' : 'output blue';
                 break;
         }
     }
@@ -225,7 +232,7 @@
         const outputs = document.querySelectorAll('.output');
         outputs.forEach(output => {
             output.innerText = '0';
-            output.className = 'output red';
+            output.className = 'output blue';
         });
     }
 </script>
