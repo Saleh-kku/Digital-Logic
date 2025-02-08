@@ -38,6 +38,9 @@
             width: 300px; /* Fixed width for IC representations */
             height: auto; /* Maintain aspect ratio */
         }
+        .bold {
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -47,8 +50,8 @@
 <table>
     <thead>
         <tr>
-            <th>Gate</th>
-            <th>Equation</th>
+            <th class="bold">Gate</th>
+            <th class="bold">Equation</th>
             <th>Truth Table</th>
             <th>Logic Diagram</th>
             <th>IC Representation</th>
@@ -56,8 +59,8 @@
     </thead>
     <tbody>
         <tr>
-            <td>NOT</td>
-            <td>Y = ¬A</td>
+            <td class="bold">NOT</td>
+            <td class="bold"> Y = <span style="text-decoration: overline;">A</span></td>
             <td>
                 <table>
                     <tr><td>A</td><td>Y</td></tr>
@@ -69,8 +72,8 @@
             <td><img class="ic-representation" src="NOT_IC_NB.png" alt="74HC14 IC"></td>
         </tr>
         <tr>
-            <td>AND</td>
-            <td>Y = A . B</td>
+            <td class="bold">AND</td>
+            <td class="bold">Y = A . B</td>
             <td>
                 <table>
                     <tr><td>A</td><td>B</td><td>Y</td></tr>
@@ -84,8 +87,8 @@
             <td><img class="ic-representation" src="AND_IC_NB.png" alt="74HC08 IC"></td>
         </tr>
         <tr>
-            <td>NAND</td>
-            <td>Y = ¬(A . B)</td>
+            <td class="bold">NAND</td>
+            <td class="bold">Y = <span style="text-decoration: overline;"> (A . B)</span></td>
             <td>
                 <table>
                     <tr><td>A</td><td>B</td><td>Y</td></tr>
@@ -99,8 +102,8 @@
             <td><img class="ic-representation" src="NAND_IC_NB.png" alt="74HC20 IC"></td>
         </tr>
         <tr>
-            <td>OR</td>
-            <td>Y = A + B</td>
+            <td class="bold">OR</td>
+            <td class="bold">Y = A + B</td>
             <td>
                 <table>
                     <tr><td>A</td><td>B</td><td>Y</td></tr>
@@ -114,8 +117,8 @@
             <td><img class="ic-representation" src="OR_IC_NB.png" alt="74HC32 IC"></td>
         </tr>
         <tr>
-            <td>NOR</td>
-            <td>Y = ¬(A + B)</td>
+            <td class="bold">NOR</td>
+            <td class="bold">Y = <span style="text-decoration: overline;">(A+B)</span></td>
             <td>
                 <table>
                     <tr><td>A</td><td>B</td><td>Y</td></tr>
@@ -129,8 +132,8 @@
             <td><img class="ic-representation" src="NOR_IC_NB.png" alt="74HC02 IC"></td>
         </tr>
         <tr>
-            <td>XOR</td>
-            <td>Y = A ⊕ B</td>
+            <td class="bold">XOR</td>
+            <td class="bold">Y = A ⊕ B</td>
             <td>
                 <table>
                     <tr><td>A</td><td>B</td><td>Y</td></tr>
@@ -144,8 +147,8 @@
             <td><img class="ic-representation" src="XOR_IC_NB.png" alt="74HC86 IC"></td>
         </tr>
         <tr>
-            <td>XNOR</td>
-            <td>Y = ¬(A ⊕ B)</td>
+            <td class="bold">XNOR</td>
+            <td class="bold">Y = <span style="text-decoration: overline;">(A ⊕ B)</span></td>
             <td>
                 <table>
                     <tr><td>A</td><td>B</td><td>Y</td></tr>
