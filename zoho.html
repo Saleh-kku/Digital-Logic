@@ -1,0 +1,2439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zoho Integration System Design</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#5D5CDE',
+                        secondary: '#4B4BA3',
+                        zoho: '#EA433B'
+                    }
+                }
+            }
+        }
+        
+        // Dark mode detection
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        }
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            if (event.matches) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+    </script>
+</head>
+<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200">
+    <div class="container mx-auto px-4 py-8 max-w-5xl">
+        <!-- Header -->
+        <header class="text-center mb-12">
+            <h1 class="text-3xl md:text-4xl font-bold mb-4">Zoho Integration System Design</h1>
+            <p class="text-lg text-gray-600 dark:text-gray-300">Custom Solution for Distribution & Sales Business</p>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <div class="mb-8">
+            <div class="border-b border-gray-200 dark:border-gray-700">
+                <nav class="flex flex-wrap -mb-px">
+                    <button class="tab-btn active py-2 px-4 text-primary border-b-2 border-primary font-medium text-sm" data-tab="overview">System Overview</button>
+                    <button class="tab-btn py-2 px-4 text-gray-500 dark:text-gray-400 border-b-2 border-transparent font-medium text-sm hover:text-gray-700 hover:border-gray-300 dark:hover:text-gray-300" data-tab="architecture">Architecture</button>
+                    <button class="tab-btn py-2 px-4 text-gray-500 dark:text-gray-400 border-b-2 border-transparent font-medium text-sm hover:text-gray-700 hover:border-gray-300 dark:hover:text-gray-300" data-tab="datamodel">Data Model</button>
+                    <button class="tab-btn py-2 px-4 text-gray-500 dark:text-gray-400 border-b-2 border-transparent font-medium text-sm hover:text-gray-700 hover:border-gray-300 dark:hover:text-gray-300" data-tab="workflows">Workflows</button>
+                    <button class="tab-btn py-2 px-4 text-gray-500 dark:text-gray-400 border-b-2 border-transparent font-medium text-sm hover:text-gray-700 hover:border-gray-300 dark:hover:text-gray-300" data-tab="ui">UI Mockups</button>
+                    <button class="tab-btn py-2 px-4 text-gray-500 dark:text-gray-400 border-b-2 border-transparent font-medium text-sm hover:text-gray-700 hover:border-gray-300 dark:hover:text-gray-300" data-tab="pricing">Pricing</button>
+                    <button class="tab-btn py-2 px-4 text-gray-500 dark:text-gray-400 border-b-2 border-transparent font-medium text-sm hover:text-gray-700 hover:border-gray-300 dark:hover:text-gray-300" data-tab="timeline">Timeline</button>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="tab-content">
+            <!-- System Overview Tab -->
+            <div id="overview" class="tab-pane active">
+                <h2 class="text-2xl font-bold mb-6">System Overview</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                        <h3 class="text-xl font-semibold mb-4">Project Objectives</h3>
+                        <ul class="list-disc pl-5 space-y-2">
+                            <li>Integrate Zoho Books with Zoho Creator for seamless data flow</li>
+                            <li>Develop custom app for sales team to manage clients</li>
+                            <li>Support multiple payment methods (Cash, POS, Bank Transfer, Deferred)</li>
+                            <li>Implement approval workflow for deferred payments</li>
+                            <li>Create audit-safe transaction logs and payment confirmations</li>
+                            <li>Generate receipts for clients with downloadable PDFs</li>
+                            <li>Provide robust error handling and reporting</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                        <h3 class="text-xl font-semibold mb-4">Key Components</h3>
+                        <ul class="list-disc pl-5 space-y-2">
+                            <li>Zoho Books (Financial Management)</li>
+                            <li>Zoho Creator (Custom App Development)</li>
+                            <li>Sales Entry Form with multi-payment support</li>
+                            <li>Client Management System</li>
+                            <li>Approval Workflow for Deferred Payments</li>
+                            <li>Payment Confirmation & Receipt Generation</li>
+                            <li>Reminder System for Due Payments</li>
+                            <li>Analytics & Reporting Dashboard</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                    <h3 class="text-xl font-semibold mb-4">System Benefits</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                            <h4 class="font-medium text-lg mb-2">Efficiency</h4>
+                            <p class="text-gray-600 dark:text-gray-300">Streamlined workflows reduce manual data entry and minimize errors in client and invoice management.</p>
+                        </div>
+                        <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                            <h4 class="font-medium text-lg mb-2">Visibility</h4>
+                            <p class="text-gray-600 dark:text-gray-300">Real-time tracking of invoices, payments, and approvals across the entire sales process.</p>
+                        </div>
+                        <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                            <h4 class="font-medium text-lg mb-2">Compliance</h4>
+                            <p class="text-gray-600 dark:text-gray-300">Structured approval processes and audit logs ensure proper documentation and financial compliance.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                    <h3 class="text-xl font-semibold mb-4">User Roles & Benefits</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                            <thead class="bg-gray-50 dark:bg-gray-700">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Role</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Primary Functions</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Key Benefits</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap font-medium">Sales Team</td>
+                                    <td class="px-6 py-4">
+                                        <ul class="list-disc pl-5 text-sm">
+                                            <li>Create new client records</li>
+                                            <li>Process sales with multiple payment methods</li>
+                                            <li>Generate client receipts</li>
+                                            <li>View their sales history</li>
+                                        </ul>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <ul class="list-disc pl-5 text-sm">
+                                            <li>Simple, mobile-friendly interface</li>
+                                            <li>No Zoho Books knowledge required</li>
+                                            <li>Instant receipt generation</li>
+                                            <li>Track personal sales performance</li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap font-medium">Managers</td>
+                                    <td class="px-6 py-4">
+                                        <ul class="list-disc pl-5 text-sm">
+                                            <li>Review and approve deferred payments</li>
+                                            <li>Monitor team performance</li>
+                                            <li>Access sales analytics</li>
+                                            <li>Handle exceptional cases</li>
+                                        </ul>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <ul class="list-disc pl-5 text-sm">
+                                            <li>Decision support with client history</li>
+                                            <li>Simplified approval dashboard</li>
+                                            <li>Real-time performance tracking</li>
+                                            <li>Audit log for accountability</li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap font-medium">Finance Team</td>
+                                    <td class="px-6 py-4">
+                                        <ul class="list-disc pl-5 text-sm">
+                                            <li>Confirm payment receipts</li>
+                                            <li>Process bank/POS confirmations</li>
+                                            <li>Monitor deferred payment status</li>
+                                            <li>Generate financial reports</li>
+                                        </ul>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <ul class="list-disc pl-5 text-sm">
+                                            <li>Complete financial tracking</li>
+                                            <li>Automatic reconciliation</li>
+                                            <li>Payment reminder automation</li>
+                                            <li>Simplified accounting</li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap font-medium">IT Administrators</td>
+                                    <td class="px-6 py-4">
+                                        <ul class="list-disc pl-5 text-sm">
+                                            <li>Manage user permissions</li>
+                                            <li>Address system errors</li>
+                                            <li>Maintain integrations</li>
+                                            <li>Configure system settings</li>
+                                        </ul>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <ul class="list-disc pl-5 text-sm">
+                                            <li>Error handling dashboard</li>
+                                            <li>Detailed logs for troubleshooting</li>
+                                            <li>Simplified API management</li>
+                                            <li>Role-based security controls</li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Architecture Tab -->
+            <div id="architecture" class="tab-pane hidden">
+                <h2 class="text-2xl font-bold mb-6">System Architecture</h2>
+                
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
+                    <h3 class="text-xl font-semibold mb-4">High-Level Architecture</h3>
+                    <div class="architecture-diagram h-80 bg-gray-100 dark:bg-gray-700 rounded-lg p-4 flex items-center justify-center">
+                        <!-- SVG Architecture Diagram -->
+                        <svg width="100%" height="100%" viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Zoho Creator Box -->
+                            <rect x="50" y="100" width="200" height="100" rx="10" fill="#5D5CDE" class="dark:opacity-80" />
+                            <text x="150" y="150" text-anchor="middle" fill="white" font-weight="bold">Zoho Creator</text>
+                            <text x="150" y="170" text-anchor="middle" fill="white">Custom Sales App</text>
+                            
+                            <!-- Zoho Books Box -->
+                            <rect x="550" y="100" width="200" height="100" rx="10" fill="#EA433B" class="dark:opacity-80" />
+                            <text x="650" y="150" text-anchor="middle" fill="white" font-weight="bold">Zoho Books</text>
+                            <text x="650" y="170" text-anchor="middle" fill="white">Financial Management</text>
+                            
+                            <!-- Integration Arrow -->
+                            <line x1="250" y1="150" x2="550" y2="150" stroke="#4B4BA3" stroke-width="4" stroke-dasharray="10,5" />
+                            <polygon points="540,140 560,150 540,160" fill="#4B4BA3" />
+                            <polygon points="260,140 240,150 260,160" fill="#4B4BA3" />
+                            
+                            <!-- Integration Text -->
+                            <rect x="350" y="120" width="100" height="60" rx="10" fill="#4B4BA3" />
+                            <text x="400" y="150" text-anchor="middle" fill="white" font-weight="bold">API</text>
+                            <text x="400" y="170" text-anchor="middle" fill="white">Integration</text>
+                            
+                            <!-- Users -->
+                            <circle cx="100" cy="40" r="30" fill="#64748b" />
+                            <text x="100" y="45" text-anchor="middle" fill="white" font-weight="bold">Sales</text>
+                            <line x1="100" y1="70" x2="100" y2="100" stroke="#64748b" stroke-width="2" />
+                            
+                            <!-- Managers -->
+                            <circle cx="200" cy="40" r="30" fill="#64748b" />
+                            <text x="200" y="45" text-anchor="middle" fill="white" font-weight="bold">Manager</text>
+                            <line x1="200" y1="70" x2="200" y2="100" stroke="#64748b" stroke-width="2" />
+                            
+                            <!-- Finance -->
+                            <circle cx="650" cy="40" r="30" fill="#64748b" />
+                            <text x="650" y="45" text-anchor="middle" fill="white" font-weight="bold">Finance</text>
+                            <line x1="650" y1="70" x2="650" y2="100" stroke="#64748b" stroke-width="2" />
+                            
+                            <!-- Database -->
+                            <rect x="300" y="230" width="200" height="50" rx="5" fill="#94a3b8" />
+                            <text x="400" y="260" text-anchor="middle" fill="white" font-weight="bold">Shared Client Database</text>
+                            <line x1="150" y1="200" x2="300" y2="230" stroke="#94a3b8" stroke-width="2" />
+                            <line x1="650" y1="200" x2="500" y2="230" stroke="#94a3b8" stroke-width="2" />
+                        </svg>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                        <h3 class="text-xl font-semibold mb-4">Data Flow</h3>
+                        <p class="mb-4">The system implements bidirectional data flow between Zoho Creator and Zoho Books:</p>
+                        <ul class="list-disc pl-5 space-y-2">
+                            <li><span class="font-medium">Creator → Books:</span> Client information, invoice details, payment data</li>
+                            <li><span class="font-medium">Books → Creator:</span> Financial status, invoice IDs, payment confirmations</li>
+                            <li><span class="font-medium">Real-time Sync:</span> Using Zoho API and webhooks for immediate updates</li>
+                            <li><span class="font-medium">Data Validation:</span> Implemented at both Creator and Books levels</li>
+                            <li><span class="font-medium">Error Handling:</span> Failed transactions are logged and can be retried</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                        <h3 class="text-xl font-semibold mb-4">Integration Components</h3>
+                        <ul class="list-disc pl-5 space-y-2">
+                            <li><span class="font-medium">Zoho Creator API Functions:</span> Custom Deluge scripts to handle data transfer</li>
+                            <li><span class="font-medium">Zoho Books API Endpoints:</span> Clients, Invoices, Items, Payments</li>
+                            <li><span class="font-medium">Authentication:</span> OAuth 2.0 for secure API access</li>
+                            <li><span class="font-medium">PDF Generation:</span> Using zoho.creator.createPDF() for receipts</li>
+                            <li><span class="font-medium">Scheduled Workflows:</span> Automated payment reminders and reconciliation</li>
+                            <li><span class="font-medium">Error Recovery:</span> Intelligent retry mechanism with error logs</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="mt-6 bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                    <h3 class="text-xl font-semibold mb-4">Payment Processing Architecture</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                        <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                            <h4 class="font-medium text-center mb-2 text-green-600 dark:text-green-400">Cash Payment</h4>
+                            <div class="text-sm">
+                                <ol class="list-decimal pl-5 space-y-1">
+                                    <li>Sales records transaction</li>
+                                    <li>Status: "Cash Pending Deposit"</li>
+                                    <li>Receipt generated for client</li>
+                                    <li>Admin confirms deposit</li>
+                                    <li>Books records completed payment</li>
+                                </ol>
+                            </div>
+                        </div>
+                        <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                            <h4 class="font-medium text-center mb-2 text-blue-600 dark:text-blue-400">POS Payment</h4>
+                            <div class="text-sm">
+                                <ol class="list-decimal pl-5 space-y-1">
+                                    <li>Sales enters POS reference #</li>
+                                    <li>Status: "POS Pending Confirmation"</li>
+                                    <li>Receipt generated for client</li>
+                                    <li>Finance verifies POS transaction</li>
+                                    <li>Books records completed payment</li>
+                                </ol>
+                            </div>
+                        </div>
+                        <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                            <h4 class="font-medium text-center mb-2 text-purple-600 dark:text-purple-400">Bank Transfer</h4>
+                            <div class="text-sm">
+                                <ol class="list-decimal pl-5 space-y-1">
+                                    <li>Sales enters bank reference</li>
+                                    <li>Optional proof upload</li>
+                                    <li>Status: "Bank Pending Confirmation"</li>
+                                    <li>Finance verifies bank deposit</li>
+                                    <li>Books records completed payment</li>
+                                </ol>
+                            </div>
+                        </div>
+                        <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                            <h4 class="font-medium text-center mb-2 text-orange-600 dark:text-orange-400">Deferred Payment</h4>
+                            <div class="text-sm">
+                                <ol class="list-decimal pl-5 space-y-1">
+                                    <li>Sales sets due date & interest</li>
+                                    <li>Status: "Awaiting Approval"</li>
+                                    <li>Manager reviews & approves</li>
+                                    <li>Status: "Deferred - Pending Payment"</li>
+                                    <li>Automated reminders sent</li>
+                                    <li>Finance confirms when paid</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg">
+                        <h4 class="font-medium mb-2">Security & Audit Features</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <h5 class="text-sm font-medium">Transaction Logging</h5>
+                                <ul class="list-disc pl-5 text-sm">
+                                    <li>Every payment action is timestamped</li>
+                                    <li>User information recorded with each step</li>
+                                    <li>Status changes are tracked in Approval_Log</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h5 class="text-sm font-medium">Permissions Control</h5>
+                                <ul class="list-disc pl-5 text-sm">
+                                    <li>Role-based access to sensitive functions</li>
+                                    <li>Only Finance can confirm payments</li>
+                                    <li>Managers have exclusive approval rights</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h5 class="text-sm font-medium">Error Handling</h5>
+                                <ul class="list-disc pl-5 text-sm">
+                                    <li>API errors captured in Error_Log</li>
+                                    <li>Failed transactions marked for review</li>
+                                    <li>Retry mechanism for transient failures</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Data Model Tab -->
+            <div id="datamodel" class="tab-pane hidden">
+                <h2 class="text-2xl font-bold mb-6">Data Model & Forms</h2>
+                
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
+                    <h3 class="text-xl font-semibold mb-4">Sales_Entry Form Structure</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                            <thead class="bg-gray-50 dark:bg-gray-700">
+                                <tr>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Group</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Field</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Type</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                <!-- Client Info -->
+                                <tr>
+                                    <td class="px-4 py-3 whitespace-nowrap" rowspan="3">Client Info</td>
+                                    <td class="px-4 py-3 whitespace-nowrap">Client_Name</td>
+                                    <td class="px-4 py-3 whitespace-nowrap">Single Line</td>
+                                    <td class="px-4 py-3">Full name</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-3 whitespace-nowrap">Phone_Number</td>
+                                    <td class="px-4 py-3 whitespace-nowrap">Phone</td>
+                                    <td class="px-4 py-3">Optional</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-3 whitespace-nowrap">National_ID</td>
+                                    <td class="px-4 py-3 whitespace-nowrap">Single Line</td>
+                                    <td class="px-4 py-3">Optional</td>
+                                </tr>
+                                
+                                <!-- Product Info -->
+                                <tr>
+                                    <td class="px-4 py-3 whitespace-nowrap">Product Info</td>
+                                    <td class="px-4 py-3 whitespace-nowrap">Product_List</td>
+                                    <td class="px-4 py-3 whitespace-nowrap">Subform</td>
+                                    <td class="px-4 py-3">(Product Name, Qty, Unit Price, Total)</td>
+                                </tr>
+                                
+                                <!-- Totals -->
+                                <tr>
+                                    <td class="px-4 py-3 whitespace-nowrap">Totals</td>
+                                    <td class="px-4 py-3 whitespace-nowrap">Total_Amount</td>
+                                    <td class="px-4 py-3 whitespace-nowrap">Formula</td>
+                                    <td class="px-4 py-3">Auto-calculated</td>
+                                </tr>
+                                
+                                <!-- Payment Info -->
+                                <tr>
+                                    <td class="px-4 py-3 whitespace-nowrap" rowspan="8">Payment Info</td>
+                                    <td class="px-4 py-3 whitespace-nowrap">Payment_Type</td>
+                                    <td class="px-4 py-3 whitespace-nowrap">Dropdown</td>
+                                    <td class="px-4 py-3">Cash, Bank Transfer, POS, Deferred</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-3 whitespace-nowrap">POS_Ref_No</td>
+                                    <td class="px-4 py-3 whitespace-nowrap">Single Line</td>
+                                    <td class="px-4 py-3">Shown if POS</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-3 whitespace-nowrap">Bank_Ref_No</td>
+                                    <td class="px-4 py-3 whitespace-nowrap">Single Line</td>
+                                    <td class="px-4 py-3">Shown if Bank</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-3 whitespace-nowrap">Proof_of_Transfer</td>
+                                    <td class="px-4 py-3 whitespace-nowrap">File Upload</td>
+                                    <td class="px-4 py-3">Optional proof image</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-3 whitespace-nowrap">Due_Date</td>
+                                    <td class="px-4 py-3 whitespace-nowrap">Date</td>
+                                    <td class="px-4 py-3">Shown if Deferred</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-3 whitespace-nowrap">Interest</td>
+                                    <td class="px-4 py-3 whitespace-nowrap">Number</td>
+                                    <td class="px-4 py-3">Shown if Deferred</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-3 whitespace-nowrap">Payment_Notes</td>
+                                    <td class="px-4 py-3 whitespace-nowrap">Multi-line</td>
+                                    <td class="px-4 py-3">Optional</td>
+                                </tr>
+                                
+                                <!-- System Fields -->
+                                <tr>
+                                    <td class="px-4 py-3 whitespace-nowrap" rowspan="6">System Fields</td>
+                                    <td class="px-4 py-3 whitespace-nowrap">Client_Books_ID</td>
+                                    <td class="px-4 py-3 whitespace-nowrap">Hidden Text</td>
+                                    <td class="px-4 py-3">Filled by Deluge</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-3 whitespace-nowrap">Invoice_Books_ID</td>
+                                    <td class="px-4 py-3 whitespace-nowrap">Hidden Text</td>
+                                    <td class="px-4 py-3">Filled by Deluge</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-3 whitespace-nowrap">Payment_Status</td>
+                                    <td class="px-4 py-3 whitespace-nowrap">Dropdown</td>
+                                    <td class="px-4 py-3">Default: Draft</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-3 whitespace-nowrap">Approval_Log</td>
+                                    <td class="px-4 py-3 whitespace-nowrap">Multi-line</td>
+                                    <td class="px-4 py-3">Auto-filled</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-3 whitespace-nowrap">Error_Log</td>
+                                    <td class="px-4 py-3 whitespace-nowrap">Multi-line</td>
+                                    <td class="px-4 py-3">Auto-filled</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-3 whitespace-nowrap">Payment_Confirmed_By</td>
+                                    <td class="px-4 py-3 whitespace-nowrap">User</td>
+                                    <td class="px-4 py-3">Set manually</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-3 whitespace-nowrap"></td>
+                                    <td class="px-4 py-3 whitespace-nowrap">Confirmation_Date</td>
+                                    <td class="px-4 py-3 whitespace-nowrap">Date-Time</td>
+                                    <td class="px-4 py-3">Set manually</td>
+                                </tr>
+                                
+                                <!-- Receipt -->
+                                <tr>
+                                    <td class="px-4 py-3 whitespace-nowrap">Receipt</td>
+                                    <td class="px-4 py-3 whitespace-nowrap">Receipt_File</td>
+                                    <td class="px-4 py-3 whitespace-nowrap">File Upload</td>
+                                    <td class="px-4 py-3">Generated as PDF</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                        <h3 class="text-xl font-semibold mb-4">Payment Status Values</h3>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                <thead class="bg-gray-50 dark:bg-gray-700">
+                                    <tr>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status Value</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                    <tr>
+                                        <td class="px-4 py-3 whitespace-nowrap">Draft</td>
+                                        <td class="px-4 py-3">Initial state when form is saved but not submitted</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-3 whitespace-nowrap">Cash Pending Deposit</td>
+                                        <td class="px-4 py-3">Cash payment received but not yet deposited/confirmed</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-3 whitespace-nowrap">POS Pending Confirmation</td>
+                                        <td class="px-4 py-3">POS payment made but waiting for finance verification</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-3 whitespace-nowrap">Bank Pending Confirmation</td>
+                                        <td class="px-4 py-3">Bank transfer initiated but not yet confirmed</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-3 whitespace-nowrap">Awaiting Approval</td>
+                                        <td class="px-4 py-3">Deferred payment waiting for manager approval</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-3 whitespace-nowrap">Deferred - Pending Payment</td>
+                                        <td class="px-4 py-3">Approved deferred payment waiting for future payment</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-3 whitespace-nowrap">Payment Confirmed</td>
+                                        <td class="px-4 py-3">Payment fully verified and reconciled in Zoho Books</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-3 whitespace-nowrap">Rejected</td>
+                                        <td class="px-4 py-3">Deferred payment request rejected by manager</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-3 whitespace-nowrap">Error - Needs Fix</td>
+                                        <td class="px-4 py-3">API error occurred, needs admin attention</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                        <h3 class="text-xl font-semibold mb-4">Reports & Analytics</h3>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                <thead class="bg-gray-50 dark:bg-gray-700">
+                                    <tr>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Report</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                    <tr>
+                                        <td class="px-4 py-3 whitespace-nowrap">My Sales</td>
+                                        <td class="px-4 py-3">Filtered by logged-in user</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-3 whitespace-nowrap">Pending Approvals</td>
+                                        <td class="px-4 py-3">For Managers to review deferred payment requests</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-3 whitespace-nowrap">Pending Confirmations</td>
+                                        <td class="px-4 py-3">For Finance to verify payments (Cash/POS/Bank)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-3 whitespace-nowrap">Outstanding Deferred</td>
+                                        <td class="px-4 py-3">For collections team to follow up on due payments</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-3 whitespace-nowrap">Audit Log</td>
+                                        <td class="px-4 py-3">Shows approval and error history</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-3 whitespace-nowrap">All Sales with Filters</td>
+                                        <td class="px-4 py-3">Date ranges, statuses, amounts, salesperson</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <h3 class="text-xl font-semibold mt-6 mb-4">Permissions & Roles</h3>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                <thead class="bg-gray-50 dark:bg-gray-700">
+                                    <tr>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Role</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Permissions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                    <tr>
+                                        <td class="px-4 py-3 whitespace-nowrap">Salesperson</td>
+                                        <td class="px-4 py-3">Submit new sale, generate receipt, view their entries</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-3 whitespace-nowrap">Manager</td>
+                                        <td class="px-4 py-3">Approve/Reject deferred sales, view reports</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-3 whitespace-nowrap">Finance/Admin</td>
+                                        <td class="px-4 py-3">Confirm payment, mark paid, manage errors</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-3 whitespace-nowrap">Super Admin</td>
+                                        <td class="px-4 py-3">Full access, reports, logs, user management</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Workflows Tab -->
+            <div id="workflows" class="tab-pane hidden">
+                <h2 class="text-2xl font-bold mb-6">Business Workflows</h2>
+                
+                <div class="mb-8">
+                    <div class="flex mb-2">
+                        <button class="workflow-btn active bg-primary text-white px-4 py-2 rounded-l-lg" data-workflow="immediate">Immediate Payment Workflow</button>
+                        <button class="workflow-btn bg-gray-200 dark:bg-gray-700 px-4 py-2 rounded-r-lg" data-workflow="deferred">Deferred Payment Workflow</button>
+                    </div>
+                    
+                    <!-- Immediate Payment Workflow -->
+                    <div id="immediate-workflow" class="workflow-content bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                        <h3 class="text-xl font-semibold mb-4">Immediate Payment Workflow (Cash/POS/Bank)</h3>
+                        <div class="mb-4 workflow-diagram h-80 bg-gray-100 dark:bg-gray-700 rounded-lg p-4 flex items-center justify-center">
+                            <!-- SVG Workflow Diagram -->
+                            <svg width="100%" height="100%" viewBox="0 0 800 230" xmlns="http://www.w3.org/2000/svg">
+                                <!-- Steps -->
+                                <rect x="50" y="100" width="150" height="60" rx="10" fill="#5D5CDE" class="dark:opacity-80" />
+                                <text x="125" y="130" text-anchor="middle" fill="white" font-weight="bold">Add/Select Client</text>
+                                
+                                <rect x="250" y="100" width="150" height="60" rx="10" fill="#5D5CDE" class="dark:opacity-80" />
+                                <text x="325" y="130" text-anchor="middle" fill="white" font-weight="bold">Create Invoice</text>
+                                
+                                <rect x="450" y="100" width="150" height="60" rx="10" fill="#5D5CDE" class="dark:opacity-80" />
+                                <text x="525" y="120" text-anchor="middle" fill="white" font-weight="bold">Process Payment</text>
+                                <text x="525" y="140" text-anchor="middle" fill="white" font-size="12">(Cash/POS/Bank)</text>
+                                
+                                <rect x="650" y="40" width="150" height="60" rx="10" fill="#5D5CDE" class="dark:opacity-80" />
+                                <text x="725" y="70" text-anchor="middle" fill="white" font-weight="bold">Generate Receipt</text>
+                                
+                                <rect x="650" y="160" width="150" height="60" rx="10" fill="#EA433B" class="dark:opacity-80" />
+                                <text x="725" y="190" text-anchor="middle" fill="white" font-weight="bold">Finance Confirms</text>
+                                
+                                <!-- Connecting Arrows -->
+                                <line x1="200" y1="130" x2="250" y2="130" stroke="#4B4BA3" stroke-width="3" />
+                                <polygon points="240,125 250,130 240,135" fill="#4B4BA3" />
+                                
+                                <line x1="400" y1="130" x2="450" y2="130" stroke="#4B4BA3" stroke-width="3" />
+                                <polygon points="440,125 450,130 440,135" fill="#4B4BA3" />
+                                
+                                <line x1="600" y1="130" x2="650" y2="70" stroke="#4B4BA3" stroke-width="3" />
+                                <polygon points="640,75 650,70 645,80" fill="#4B4BA3" />
+                                
+                                <line x1="600" y1="130" x2="650" y2="190" stroke="#4B4BA3" stroke-width="3" />
+                                <polygon points="640,185 650,190 645,180" fill="#4B4BA3" />
+                                
+                                <!-- Systems Label -->
+                                <rect x="50" y="30" width="150" height="40" rx="5" fill="#94a3b8" opacity="0.5" />
+                                <text x="125" y="55" text-anchor="middle" fill="black" font-weight="bold" class="dark:fill-white">ZOHO CREATOR</text>
+                                
+                                <rect x="250" y="30" width="350" height="40" rx="5" fill="#94a3b8" opacity="0.5" />
+                                <text x="425" y="55" text-anchor="middle" fill="black" font-weight="bold" class="dark:fill-white">ZOHO CREATOR</text>
+                                
+                                <rect x="650" y="220" width="150" height="30" rx="5" fill="#EA433B" opacity="0.3" />
+                                <text x="725" y="240" text-anchor="middle" fill="black" font-weight="bold" class="dark:fill-white">ZOHO BOOKS</text>
+                                
+                                <!-- Dotted lines to systems -->
+                                <line x1="125" y1="70" x2="125" y2="100" stroke="#94a3b8" stroke-width="2" stroke-dasharray="5,5" />
+                                <line x1="425" y1="70" x2="425" y2="100" stroke="#94a3b8" stroke-width="2" stroke-dasharray="5,5" />
+                                <line x1="725" y1="220" x2="725" y2="190" stroke="#EA433B" stroke-width="2" stroke-dasharray="5,5" />
+                            </svg>
+                        </div>
+                        <div class="mt-4">
+                            <h4 class="font-medium text-lg mb-2">Process Steps:</h4>
+                            <ol class="list-decimal pl-5 space-y-2">
+                                <li><span class="font-medium">Client Selection:</span> Sales team selects existing client or adds a new one</li>
+                                <li><span class="font-medium">Invoice Creation:</span> Sales creates invoice with product details and amounts</li>
+                                <li><span class="font-medium">Payment Processing:</span> 
+                                    <ul class="list-disc pl-5 mt-1">
+                                        <li><strong>Cash:</strong> Record amount received, mark as "Cash Pending Deposit"</li>
+                                        <li><strong>POS:</strong> Enter POS reference number, mark as "POS Pending Confirmation"</li>
+                                        <li><strong>Bank Transfer:</strong> Enter transfer details, optional proof upload, mark as "Bank Pending Confirmation"</li>
+                                    </ul>
+                                </li>
+                                <li><span class="font-medium">Receipt Generation:</span> System generates PDF receipt for customer</li>
+                                <li><span class="font-medium">Finance Confirmation:</span> Finance department confirms payment receipt:
+                                    <ul class="list-disc pl-5 mt-1">
+                                        <li>Verifies cash deposit, POS transaction, or bank transfer</li>
+                                        <li>Updates status to "Payment Confirmed"</li>
+                                        <li>Records confirmation date and user who confirmed</li>
+                                    </ul>
+                                </li>
+                                <li><span class="font-medium">Books Integration:</span> Invoice and payment details automatically transfer to Zoho Books</li>
+                            </ol>
+                        </div>
+                    </div>
+                    
+                    <!-- Deferred Payment Workflow -->
+                    <div id="deferred-workflow" class="workflow-content hidden bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                        <h3 class="text-xl font-semibold mb-4">Deferred Payment Process</h3>
+                        <div class="mb-4 workflow-diagram h-96 bg-gray-100 dark:bg-gray-700 rounded-lg p-4 flex items-center justify-center">
+                            <!-- SVG Workflow Diagram -->
+                            <svg width="100%" height="100%" viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg">
+                                <!-- Steps -->
+                                <rect x="50" y="70" width="150" height="50" rx="10" fill="#5D5CDE" class="dark:opacity-80" />
+                                <text x="125" y="100" text-anchor="middle" fill="white" font-weight="bold">Add/Select Client</text>
+                                
+                                <rect x="250" y="70" width="150" height="50" rx="10" fill="#5D5CDE" class="dark:opacity-80" />
+                                <text x="325" y="100" text-anchor="middle" fill="white" font-weight="bold">Create Invoice</text>
+                                
+                                <rect x="250" y="150" width="150" height="50" rx="10" fill="#5D5CDE" class="dark:opacity-80" />
+                                <text x="325" y="175" text-anchor="middle" fill="white" font-weight="bold">Set Due Date</text>
+                                <text x="325" y="190" text-anchor="middle" fill="white" font-size="12">& Interest Rate</text>
+                                
+                                <rect x="450" y="150" width="150" height="50" rx="10" fill="#5D5CDE" class="dark:opacity-80" />
+                                <text x="525" y="180" text-anchor="middle" fill="white" font-weight="bold">Submit for Approval</text>
+                                
+                                <!-- Approval Diamond -->
+                                <polygon points="650,175 675,150 700,175 675,200" fill="#EA433B" class="dark:opacity-80" />
+                                <text x="675" y="180" text-anchor="middle" fill="white" font-weight="bold">Approved?</text>
+                                
+                                <rect x="625" y="230" width="100" height="50" rx="10" fill="#5D5CDE" class="dark:opacity-80" />
+                                <text x="675" y="255" text-anchor="middle" fill="white" font-weight="bold">Revise</text>
+                                
+                                <rect x="450" y="70" width="150" height="50" rx="10" fill="#5D5CDE" class="dark:opacity-80" />
+                                <text x="525" y="95" text-anchor="middle" fill="white" font-weight="bold">Create Deferred</text>
+                                <text x="525" y="110" text-anchor="middle" fill="white" font-size="12">Invoice in Books</text>
+                                
+                                <rect x="650" y="70" width="150" height="50" rx="10" fill="#5D5CDE" class="dark:opacity-80" />
+                                <text x="725" y="95" text-anchor="middle" fill="white" font-weight="bold">Setup Payment</text>
+                                <text x="725" y="110" text-anchor="middle" fill="white" font-size="12">Reminders</text>
+                                
+                                <!-- Connecting Arrows -->
+                                <line x1="200" y1="95" x2="250" y2="95" stroke="#4B4BA3" stroke-width="3" />
+                                <polygon points="240,90 250,95 240,100" fill="#4B4BA3" />
+                                
+                                <line x1="325" y1="120" x2="325" y2="150" stroke="#4B4BA3" stroke-width="3" />
+                                <polygon points="320,140 325,150 330,140" fill="#4B4BA3" />
+                                
+                                <line x1="400" y1="175" x2="450" y2="175" stroke="#4B4BA3" stroke-width="3" />
+                                <polygon points="440,170 450,175 440,180" fill="#4B4BA3" />
+                                
+                                <line x1="600" y1="175" x2="650" y2="175" stroke="#4B4BA3" stroke-width="3" />
+                                <polygon points="640,170 650,175 640,180" fill="#4B4BA3" />
+                                
+                                <!-- Yes Path -->
+                                <line x1="675" y1="150" x2="675" y2="120" stroke="#4B4BA3" stroke-width="3" />
+                                <polygon points="670,130 675,120 680,130" fill="#4B4BA3" />
+                                <text x="660" y="135" text-anchor="middle" fill="black" font-weight="bold" class="dark:fill-white">Yes</text>
+                                
+                                <line x1="675" y1="120" x2="600" y2="95" stroke="#4B4BA3" stroke-width="3" />
+                                <polygon points="610,95 600,95 605,100" fill="#4B4BA3" />
+                                
+                                <!-- No Path -->
+                                <line x1="675" y1="200" x2="675" y2="230" stroke="#4B4BA3" stroke-width="3" />
+                                <polygon points="670,220 675,230 680,220" fill="#4B4BA3" />
+                                <text x="660" y="215" text-anchor="middle" fill="black" font-weight="bold" class="dark:fill-white">No</text>
+                                
+                                <!-- Revise back to invoice -->
+                                <line x1="625" y1="255" x2="325" y2="255" stroke="#4B4BA3" stroke-width="3" />
+                                <line x1="325" y1="255" x2="325" y2="200" stroke="#4B4BA3" stroke-width="3" />
+                                <polygon points="320,210 325,200 330,210" fill="#4B4BA3" />
+                                
+                                <!-- Final steps -->
+                                <line x1="600" y1="95" x2="650" y2="95" stroke="#4B4BA3" stroke-width="3" />
+                                <polygon points="640,90 650,95 640,100" fill="#4B4BA3" />
+                            </svg>
+                        </div>
+                        <div class="mt-4">
+                            <h4 class="font-medium text-lg mb-2">Process Steps:</h4>
+                            <ol class="list-decimal pl-5 space-y-2">
+                                <li><span class="font-medium">Client Selection:</span> Sales team selects existing client or adds a new one</li>
+                                <li><span class="font-medium">Invoice Creation:</span> Sales creates initial invoice with product details</li>
+                                <li><span class="font-medium">Deferred Payment Setup:</span> Sales specifies:
+                                    <ul class="list-disc pl-5 mt-1">
+                                        <li>Due date for payment</li>
+                                        <li>Interest rate (if applicable)</li>
+                                        <li>Any additional payment notes</li>
+                                    </ul>
+                                </li>
+                                <li><span class="font-medium">Approval Submission:</span> System sets status to "Awaiting Approval" and notifies manager</li>
+                                <li><span class="font-medium">Manager Review:</span> Manager reviews client history and payment terms</li>
+                                <li><span class="font-medium">Approval Process:</span>
+                                    <ul class="list-disc pl-5 mt-1">
+                                        <li><strong>If Approved:</strong> System creates invoice in Zoho Books marked as "Deferred - Pending Payment"</li>
+                                        <li><strong>If Rejected:</strong> Manager provides reason, sent back to sales for revision</li>
+                                    </ul>
+                                </li>
+                                <li><span class="font-medium">Reminder Setup:</span> System automatically schedules payment reminders:
+                                    <ul class="list-disc pl-5 mt-1">
+                                        <li>7 days before due date</li>
+                                        <li>1 day before due date</li>
+                                        <li>On due date</li>
+                                        <li>Follow-up reminders if payment is late</li>
+                                    </ul>
+                                </li>
+                                <li><span class="font-medium">Payment Monitoring:</span> Finance team monitors due payments</li>
+                                <li><span class="font-medium">Payment Confirmation:</span> Once received, finance confirms payment similar to immediate payment workflow</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                        <h3 class="text-xl font-semibold mb-4">Deluge Script Components</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-medium text-lg mb-2">On Form Submit</h4>
+                                <div class="bg-gray-100 dark:bg-gray-700 rounded-lg p-3">
+                                    <pre class="text-xs overflow-x-auto"><code>// Check if client exists in Zoho Books
+clientInfo = zoho.books.getRecords("contacts","organization_id");
+clientExists = false;
+
+// Search for matching client
+foreach(client in clientInfo)
+{
+    if(client.get("contact_name") == input.Client_Name)
+    {
+        clientExists = true;
+        input.Client_Books_ID = client.get("contact_id");
+        break;
+    }
+}
+
+// Create client if doesn't exist
+if(!clientExists)
+{
+    newClient = Map();
+    newClient.put("contact_name",input.Client_Name);
+    newClient.put("phone",input.Phone_Number);
+    // Add other client fields
+    
+    clientResponse = zoho.books.create("contacts",newClient,"organization_id");
+    if(clientResponse.get("code") == 0)
+    {
+        input.Client_Books_ID = clientResponse.get("contact").get("contact_id");
+    }
+    else
+    {
+        input.Error_Log = "Client creation error: " + clientResponse.get("message");
+        input.Payment_Status = "Error -- Needs Fix";
+        return input;
+    }
+}
+
+// Process based on payment type
+if(input.Payment_Type != "Deferred")
+{
+    // Create invoice immediately
+    invoiceMap = constructInvoiceData();
+    invoiceResponse = zoho.books.create("invoices",invoiceMap,"organization_id");
+    
+    if(invoiceResponse.get("code") == 0)
+    {
+        input.Invoice_Books_ID = invoiceResponse.get("invoice").get("invoice_id");
+        
+        // Set appropriate status based on payment type
+        if(input.Payment_Type == "Cash")
+        {
+            input.Payment_Status = "Cash Pending Deposit";
+        }
+        else if(input.Payment_Type == "POS")
+        {
+            input.Payment_Status = "POS Pending Confirmation";
+        }
+        else if(input.Payment_Type == "Bank Transfer")
+        {
+            input.Payment_Status = "Bank Pending Confirmation";
+        }
+    }
+    else
+    {
+        input.Error_Log = "Invoice creation error: " + invoiceResponse.get("message");
+        input.Payment_Status = "Error -- Needs Fix";
+    }
+}
+else
+{
+    // For deferred payment
+    input.Payment_Status = "Awaiting Approval";
+}
+
+return input;</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                        <h3 class="text-xl font-semibold mb-4">Receipt Generation</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-medium text-lg mb-2">Receipt Template</h4>
+                                <div class="bg-gray-100 dark:bg-gray-700 rounded-lg p-3 overflow-hidden h-64">
+                                    <div class="bg-white p-4 h-full overflow-y-auto">
+                                        <div class="text-center mb-4">
+                                            <div class="text-xl font-bold">COMPANY NAME</div>
+                                            <div class="text-sm">123 Business Address, City, Country</div>
+                                            <div class="text-sm">Phone: (123) 456-7890 | Email: info@company.com</div>
+                                        </div>
+                                        <div class="text-center font-bold border-b border-t border-gray-300 py-1 mb-3">
+                                            RECEIPT
+                                        </div>
+                                        <div class="grid grid-cols-2 gap-2 text-sm mb-3">
+                                            <div><strong>Receipt #:</strong> REC-2023-001</div>
+                                            <div><strong>Date:</strong> 15-Dec-2023</div>
+                                            <div><strong>Client:</strong> John Smith</div>
+                                            <div><strong>Phone:</strong> (555) 123-4567</div>
+                                        </div>
+                                        <table class="w-full text-sm mb-4">
+                                            <thead>
+                                                <tr class="border-b border-gray-300">
+                                                    <th class="text-left py-1">Item</th>
+                                                    <th class="text-center py-1">Qty</th>
+                                                    <th class="text-right py-1">Price</th>
+                                                    <th class="text-right py-1">Total</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="py-1">Product A</td>
+                                                    <td class="text-center py-1">2</td>
+                                                    <td class="text-right py-1">$100.00</td>
+                                                    <td class="text-right py-1">$200.00</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="py-1">Product B</td>
+                                                    <td class="text-center py-1">1</td>
+                                                    <td class="text-right py-1">$150.00</td>
+                                                    <td class="text-right py-1">$150.00</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div class="flex justify-between border-t border-gray-300 pt-1 text-sm">
+                                            <div><strong>Payment Method:</strong> Cash</div>
+                                            <div><strong>Total Amount:</strong> $350.00</div>
+                                        </div>
+                                        <div class="text-xs text-center mt-4">
+                                            Thank you for your business!
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-4 text-sm">
+                                    <p class="font-medium">PDF Generation Code:</p>
+                                    <pre class="text-xs bg-gray-100 dark:bg-gray-700 rounded-lg p-3 mt-1 overflow-x-auto"><code>generateReceipt = zoho.creator.createFunction("generate_receipt_pdf");
+htmlContent = generateReceipt.invokeByName();
+
+// Generate and save PDF
+pdfFile = zoho.creator.createPDF(htmlContent,"Receipt_" + input.ID + ".pdf");
+if(pdfFile.get("code") == 0)
+{
+    input.Receipt_File = pdfFile.get("data");
+}
+else
+{
+    input.Error_Log = input.Error_Log + "\nReceipt generation error: " + pdfFile.get("message");
+}</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-6 bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                    <h3 class="text-xl font-semibold mb-4">Error Handling & Recovery</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="font-medium text-lg mb-2">Error Logging</h4>
+                            <div class="bg-gray-100 dark:bg-gray-700 rounded-lg p-3">
+                                <p class="text-sm mb-2">All errors are captured in the Error_Log field with:</p>
+                                <ul class="list-disc pl-5 text-sm space-y-1">
+                                    <li>Timestamp of error</li>
+                                    <li>Error type and message</li>
+                                    <li>Function where error occurred</li>
+                                    <li>User who was performing the action</li>
+                                </ul>
+                                <p class="text-sm mt-2">Sample error log entry:</p>
+                                <pre class="text-xs mt-1 bg-gray-200 dark:bg-gray-600 p-2 rounded">[15-Dec-2023 14:32:45] API Error in createInvoice: 
+Authentication failed. Invalid API token.
+User: john.smith@company.com</pre>
+                            </div>
+                            
+                            <h4 class="font-medium text-lg mt-4 mb-2">Recovery Mechanism</h4>
+                            <div class="bg-gray-100 dark:bg-gray-700 rounded-lg p-3">
+                                <p class="text-sm mb-2">For records with "Error -- Needs Fix" status:</p>
+                                <ol class="list-decimal pl-5 text-sm space-y-1">
+                                    <li>Admin dashboard shows all error records</li>
+                                    <li>"Retry" button attempts the failed operation again</li>
+                                    <li>"Fix and Retry" allows editing problem fields before retry</li>
+                                    <li>System maintains full audit trail of retry attempts</li>
+                                </ol>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-lg mb-2">Common API Errors & Handling</h4>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                    <thead class="bg-gray-200 dark:bg-gray-600">
+                                        <tr>
+                                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-600 dark:text-gray-200 uppercase">Error Type</th>
+                                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-600 dark:text-gray-200 uppercase">Handling Strategy</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-gray-100 dark:bg-gray-700 divide-y divide-gray-200 dark:divide-gray-600">
+                                        <tr>
+                                            <td class="px-3 py-2 text-sm">Authentication Failure</td>
+                                            <td class="px-3 py-2 text-sm">Notify admin, request token refresh</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="px-3 py-2 text-sm">Rate Limiting</td>
+                                            <td class="px-3 py-2 text-sm">Automatic retry with exponential backoff</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="px-3 py-2 text-sm">Duplicate Client</td>
+                                            <td class="px-3 py-2 text-sm">Search and link existing record instead</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="px-3 py-2 text-sm">Invalid Data</td>
+                                            <td class="px-3 py-2 text-sm">Highlight fields needing correction</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="px-3 py-2 text-sm">Network Timeout</td>
+                                            <td class="px-3 py-2 text-sm">Automatic retry up to 3 times</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <h4 class="font-medium text-lg mt-4 mb-2">Daily Monitoring</h4>
+                            <div class="bg-gray-100 dark:bg-gray-700 rounded-lg p-3">
+                                <p class="text-sm mb-2">Automated daily checks:</p>
+                                <ul class="list-disc pl-5 text-sm space-y-1">
+                                    <li>Identify stuck records (no status change in 24+ hours)</li>
+                                    <li>Alert for records with retry failures</li>
+                                    <li>Data reconciliation between Creator and Books</li>
+                                    <li>Summary report emailed to administrators</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- UI Mockups Tab -->
+            <div id="ui" class="tab-pane hidden">
+                <h2 class="text-2xl font-bold mb-6">UI Mockups</h2>
+                
+                <div class="flex mb-4 overflow-x-auto">
+                    <button class="ui-btn active whitespace-nowrap mr-2 px-4 py-2 bg-primary text-white rounded-md" data-ui="sales">Sales Entry</button>
+                    <button class="ui-btn whitespace-nowrap mr-2 px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-md" data-ui="approval">Manager Approval</button>
+                    <button class="ui-btn whitespace-nowrap mr-2 px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-md" data-ui="confirmation">Payment Confirmation</button>
+                    <button class="ui-btn whitespace-nowrap mr-2 px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-md" data-ui="receipt">Receipt Generator</button>
+                    <button class="ui-btn whitespace-nowrap px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-md" data-ui="reports">Reports</button>
+                </div>
+                
+                <!-- Sales Entry UI -->
+                <div id="sales-ui" class="ui-content bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
+                    <h3 class="text-xl font-semibold mb-4">Sales Entry Form</h3>
+                    <div class="mockup-container border-2 border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden">
+                        <div class="mockup-header bg-primary p-4 text-white flex justify-between items-center">
+                            <div class="text-lg font-bold">New Sales Entry</div>
+                            <div class="flex items-center space-x-4">
+                                <span>Jane Doe (Sales)</span>
+                                <div class="w-8 h-8 bg-white rounded-full"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="p-4">
+                            <!-- Client Information Section -->
+                            <div class="mb-6">
+                                <h4 class="font-medium text-lg mb-3 border-b pb-2">Client Information</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium mb-1">Client Name*</label>
+                                        <div class="flex">
+                                            <select class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-md text-base focus:outline-none focus:ring-2 focus:ring-primary">
+                                                <option>Select a client...</option>
+                                                <option>ABC Corporation</option>
+                                                <option>XYZ Limited</option>
+                                                <option>+ Add New Client</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium mb-1">Phone Number</label>
+                                        <input type="tel" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-md text-base focus:outline-none focus:ring-2 focus:ring-primary" placeholder="(555) 123-4567">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium mb-1">National ID</label>
+                                        <input type="text" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-md text-base focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Optional">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Product Information Section -->
+                            <div class="mb-6">
+                                <h4 class="font-medium text-lg mb-3 border-b pb-2">Product Information</h4>
+                                <div class="overflow-x-auto mb-3">
+                                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                        <thead class="bg-gray-50 dark:bg-gray-700">
+                                            <tr>
+                                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Product</th>
+                                                <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Quantity</th>
+                                                <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Unit Price</th>
+                                                <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Total</th>
+                                                <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="border-b border-gray-200 dark:border-gray-700">
+                                                <td class="px-4 py-2">
+                                                    <select class="w-full px-2 py-1 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-md text-base">
+                                                        <option>Product A</option>
+                                                        <option>Product B</option>
+                                                        <option>Product C</option>
+                                                    </select>
+                                                </td>
+                                                <td class="px-4 py-2">
+                                                    <input type="number" min="1" value="1" class="w-20 px-2 py-1 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-md text-base text-center">
+                                                </td>
+                                                <td class="px-4 py-2">
+                                                    <input type="text" value="100.00" class="w-28 px-2 py-1 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-md text-base text-right">
+                                                </td>
+                                                <td class="px-4 py-2 text-right">$100.00</td>
+                                                <td class="px-4 py-2 text-center">
+                                                    <button class="text-red-500 hover:text-red-700">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                        </svg>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <button class="text-primary flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                    </svg>
+                                    Add Product
+                                </button>
+                                
+                                <div class="mt-4 flex justify-end">
+                                    <div class="w-64 bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
+                                        <div class="flex justify-between mb-2">
+                                            <span>Subtotal:</span>
+                                            <span>$100.00</span>
+                                        </div>
+                                        <div class="flex justify-between mb-2">
+                                            <span>Tax (10%):</span>
+                                            <span>$10.00</span>
+                                        </div>
+                                        <div class="border-t border-gray-300 dark:border-gray-600 my-2 pt-2 flex justify-between font-bold">
+                                            <span>Total:</span>
+                                            <span>$110.00</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Payment Information Section -->
+                            <div class="mb-6">
+                                <h4 class="font-medium text-lg mb-3 border-b pb-2">Payment Information</h4>
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium mb-1">Payment Type*</label>
+                                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                        <label class="flex items-center p-3 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700">
+                                            <input type="radio" name="payment_type" class="mr-2" checked>
+                                            <span>Cash</span>
+                                        </label>
+                                        <label class="flex items-center p-3 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700">
+                                            <input type="radio" name="payment_type" class="mr-2">
+                                            <span>POS</span>
+                                        </label>
+                                        <label class="flex items-center p-3 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700">
+                                            <input type="radio" name="payment_type" class="mr-2">
+                                            <span>Bank Transfer</span>
+                                        </label>
+                                        <label class="flex items-center p-3 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700">
+                                            <input type="radio" name="payment_type" class="mr-2">
+                                            <span>Deferred</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <!-- Dynamic fields based on payment type -->
+                                <div id="cash-fields" class="mb-4">
+                                    <div class="bg-green-50 dark:bg-green-900/30 p-3 rounded-lg text-sm text-green-700 dark:text-green-300">
+                                        <div class="font-medium">Cash Payment</div>
+                                        <p>Collect cash from customer and issue receipt. Finance will confirm deposit.</p>
+                                    </div>
+                                </div>
+                                
+                                <div id="pos-fields" class="mb-4 hidden">
+                                    <label class="block text-sm font-medium mb-1">POS Reference Number*</label>
+                                    <input type="text" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-md text-base focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Enter POS transaction reference">
+                                </div>
+                                
+                                <div id="bank-fields" class="mb-4 hidden">
+                                    <label class="block text-sm font-medium mb-1">Bank Reference Number*</label>
+                                    <input type="text" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-md text-base focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Enter bank transfer reference">
+                                    
+                                    <label class="block text-sm font-medium mb-1 mt-3">Proof of Transfer (Optional)</label>
+                                    <input type="file" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-md text-base">
+                                </div>
+                                
+                                <div id="deferred-fields" class="mb-4 hidden">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-sm font-medium mb-1">Due Date*</label>
+                                            <input type="date" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-md text-base focus:outline-none focus:ring-2 focus:ring-primary">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium mb-1">Interest Rate (%)</label>
+                                            <input type="number" min="0" step="0.1" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-md text-base focus:outline-none focus:ring-2 focus:ring-primary" placeholder="0.0">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mt-3 bg-yellow-50 dark:bg-yellow-900/30 p-3 rounded-lg text-sm text-yellow-700 dark:text-yellow-300">
+                                        <div class="font-medium">Deferred Payment Notice</div>
+                                        <p>This payment will require manager approval before the invoice is finalized.</p>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium mb-1">Payment Notes (Optional)</label>
+                                    <textarea class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-md text-base focus:outline-none focus:ring-2 focus:ring-primary" rows="2" placeholder="Enter any additional notes about this payment"></textarea>
+                                </div>
+                            </div>
+                            
+                            <div class="flex justify-end space-x-3">
+                                <button class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded-md">Cancel</button>
+                                <button class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded-md">Save Draft</button>
+                                <button class="px-6 py-2 bg-primary text-white rounded-md">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Manager Approval UI -->
+                <div id="approval-ui" class="ui-content hidden bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
+                    <h3 class="text-xl font-semibold mb-4">Manager Approval Dashboard</h3>
+                    <div class="mockup-container border-2 border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden">
+                        <div class="mockup-header bg-primary p-4 text-white flex justify-between items-center">
+                            <div class="text-lg font-bold">Deferred Payment Approvals</div>
+                            <div class="flex items-center space-x-4">
+                                <span>Robert Johnson (Manager)</span>
+                                <div class="w-8 h-8 bg-white rounded-full"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="p-4">
+                            <div class="mb-6 flex justify-between items-center">
+                                <div class="text-lg font-medium">Pending Approvals (5)</div>
+                                <div class="flex space-x-2">
+                                    <select class="px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-md text-sm">
+                                        <option>All Sales Reps</option>
+                                        <option>Jane Doe</option>
+                                        <option>John Smith</option>
+                                    </select>
+                                    <select class="px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-md text-sm">
+                                        <option>Sort: Newest First</option>
+                                        <option>Sort: Oldest First</option>
+                                        <option>Sort: Amount (High-Low)</option>
+                                        <option>Sort: Amount (Low-High)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <!-- Approval Cards -->
+                            <div class="space-y-4">
+                                <!-- Approval Card 1 -->
+                                <div class="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                                    <div class="bg-gray-50 dark:bg-gray-700 p-3 flex justify-between items-center">
+                                        <div class="font-medium">XYZ Corporation - $2,500.00</div>
+                                        <div class="text-sm text-gray-500 dark:text-gray-300">Submitted: Today, 10:45 AM by Jane Doe</div>
+                                    </div>
+                                    <div class="p-4">
+                                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                                            <div>
+                                                <div class="text-sm text-gray-500 dark:text-gray-400">Client Details</div>
+                                                <div class="font-medium">XYZ Corporation</div>
+                                                <div class="text-sm">Phone: (555) 234-5678</div>
+                                                <div class="text-sm">ID: ABC12345</div>
+                                            </div>
+                                            <div>
+                                                <div class="text-sm text-gray-500 dark:text-gray-400">Payment Terms</div>
+                                                <div class="font-medium">Due Date: Jan 15, 2024</div>
+                                                <div class="text-sm">Interest Rate: 1.5%</div>
+                                                <div class="text-sm">Days Until Due: 30</div>
+                                            </div>
+                                            <div>
+                                                <div class="text-sm text-gray-500 dark:text-gray-400">Client History</div>
+                                                <div class="font-medium">Previous Orders: 12</div>
+                                                <div class="text-sm">Payment Rating: <span class="text-green-600 dark:text-green-400">Excellent</span></div>
+                                                <div class="text-sm">Last Purchase: Dec 1, 2023</div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-4">
+                                            <div class="text-sm text-gray-500 dark:text-gray-400">Items Purchased</div>
+                                            <div class="overflow-x-auto">
+                                                <table class="min-w-full text-sm">
+                                                    <thead class="bg-gray-50 dark:bg-gray-700">
+                                                        <tr>
+                                                            <th class="px-3 py-2 text-left">Product</th>
+                                                            <th class="px-3 py-2 text-center">Quantity</th>
+                                                            <th class="px-3 py-2 text-right">Unit Price</th>
+                                                            <th class="px-3 py-2 text-right">Total</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td class="px-3 py-2 border-t">Product A</td>
+                                                            <td class="px-3 py-2 border-t text-center">2</td>
+                                                            <td class="px-3 py-2 border-t text-right">$500.00</td>
+                                                            <td class="px-3 py-2 border-t text-right">$1,000.00</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="px-3 py-2 border-t">Product B</td>
+                                                            <td class="px-3 py-2 border-t text-center">3</td>
+                                                            <td class="px-3 py-2 border-t text-right">$500.00</td>
+                                                            <td class="px-3 py-2 border-t text-right">$1,500.00</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-4">
+                                            <div class="text-sm text-gray-500 dark:text-gray-400">Payment Notes</div>
+                                            <div class="text-sm bg-gray-50 dark:bg-gray-700 p-2 rounded">Client has requested 30-day payment terms based on ongoing partnership. They have consistently paid on time for the past 6 months.</div>
+                                        </div>
+                                        
+                                        <div class="flex justify-end space-x-3">
+                                            <button class="text-sm px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded-md">Request Changes</button>
+                                            <button class="text-sm px-4 py-2 bg-red-500 text-white rounded-md">Reject</button>
+                                            <button class="text-sm px-4 py-2 bg-green-500 text-white rounded-md">Approve</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Approval Card 2 (Collapsed) -->
+                                <div class="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                                    <div class="bg-gray-50 dark:bg-gray-700 p-3 flex justify-between items-center cursor-pointer">
+                                        <div class="font-medium">ABC Industries - $1,200.00</div>
+                                        <div class="flex items-center">
+                                            <div class="text-sm text-gray-500 dark:text-gray-300 mr-2">Submitted: Yesterday by John Smith</div>
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Approval Card 3 (Collapsed) -->
+                                <div class="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                                    <div class="bg-gray-50 dark:bg-gray-700 p-3 flex justify-between items-center cursor-pointer">
+                                        <div class="font-medium">Global Enterprises - $3,750.00</div>
+                                        <div class="flex items-center">
+                                            <div class="text-sm text-gray-500 dark:text-gray-300 mr-2">Submitted: Yesterday by Jane Doe</div>
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4 flex justify-between items-center">
+                                <div class="text-sm text-gray-500 dark:text-gray-400">Showing 3 of 5 pending approvals</div>
+                                <div class="flex space-x-1">
+                                    <button class="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded-md">&lt;</button>
+                                    <button class="px-3 py-1 bg-primary text-white rounded-md">1</button>
+                                    <button class="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded-md">2</button>
+                                    <button class="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded-md">&gt;</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Payment Confirmation UI -->
+                <div id="confirmation-ui" class="ui-content hidden bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
+                    <h3 class="text-xl font-semibold mb-4">Payment Confirmation Dashboard</h3>
+                    <div class="mockup-container border-2 border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden">
+                        <div class="mockup-header bg-primary p-4 text-white flex justify-between items-center">
+                            <div class="text-lg font-bold">Finance Payment Confirmations</div>
+                            <div class="flex items-center space-x-4">
+                                <span>Sarah Wilson (Finance)</span>
+                                <div class="w-8 h-8 bg-white rounded-full"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="p-4">
+                            <div class="mb-6">
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div class="bg-blue-50 dark:bg-blue-900/30 p-4 rounded-lg">
+                                        <div class="text-lg font-medium text-blue-700 dark:text-blue-300">8</div>
+                                        <div class="text-sm text-blue-600 dark:text-blue-400">Cash Pending Deposit</div>
+                                    </div>
+                                    <div class="bg-purple-50 dark:bg-purple-900/30 p-4 rounded-lg">
+                                        <div class="text-lg font-medium text-purple-700 dark:text-purple-300">5</div>
+                                        <div class="text-sm text-purple-600 dark:text-purple-400">POS Pending Confirmation</div>
+                                    </div>
+                                    <div class="bg-orange-50 dark:bg-orange-900/30 p-4 rounded-lg">
+                                        <div class="text-lg font-medium text-orange-700 dark:text-orange-300">3</div>
+                                        <div class="text-sm text-orange-600 dark:text-orange-400">Bank Pending Confirmation</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4 flex justify-between items-center">
+                                <div class="text-lg font-medium">Pending Confirmations</div>
+                                <div class="flex space-x-2">
+                                    <select class="px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-md text-sm">
+                                        <option>All Payment Types</option>
+                                        <option>Cash Only</option>
+                                        <option>POS Only</option>
+                                        <option>Bank Transfer Only</option>
+                                    </select>
+                                    <input type="text" placeholder="Search by client or ID" class="px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-md text-sm">
+                                </div>
+                            </div>
+                            
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                    <thead class="bg-gray-50 dark:bg-gray-700">
+                                        <tr>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">ID</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Client</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Date</th>
+                                            <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Amount</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Payment Type</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Reference</th>
+                                            <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                        <tr>
+                                            <td class="px-4 py-3 whitespace-nowrap">SALE-1023</td>
+                                            <td class="px-4 py-3 whitespace-nowrap">XYZ Corporation</td>
+                                            <td class="px-4 py-3 whitespace-nowrap">Today, 11:23 AM</td>
+                                            <td class="px-4 py-3 text-right whitespace-nowrap">$1,250.00</td>
+                                            <td class="px-4 py-3 whitespace-nowrap">
+                                                <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-xs">Cash</span>
+                                            </td>
+                                            <td class="px-4 py-3 whitespace-nowrap">-</td>
+                                            <td class="px-4 py-3 whitespace-nowrap text-center">
+                                                <button class="text-sm px-3 py-1 bg-green-500 text-white rounded-md">Confirm</button>
+                                                <button class="text-sm px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded-md ml-1">View</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="px-4 py-3 whitespace-nowrap">SALE-1022</td>
+                                            <td class="px-4 py-3 whitespace-nowrap">ABC Industries</td>
+                                            <td class="px-4 py-3 whitespace-nowrap">Today, 10:15 AM</td>
+                                            <td class="px-4 py-3 text-right whitespace-nowrap">$750.00</td>
+                                            <td class="px-4 py-3 whitespace-nowrap">
+                                                <span class="px-2 py-1 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 rounded-full text-xs">POS</span>
+                                            </td>
+                                            <td class="px-4 py-3 whitespace-nowrap">POS-875431</td>
+                                            <td class="px-4 py-3 whitespace-nowrap text-center">
+                                                <button class="text-sm px-3 py-1 bg-green-500 text-white rounded-md">Confirm</button>
+                                                <button class="text-sm px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded-md ml-1">View</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="px-4 py-3 whitespace-nowrap">SALE-1021</td>
+                                            <td class="px-4 py-3 whitespace-nowrap">Global Enterprises</td>
+                                            <td class="px-4 py-3 whitespace-nowrap">Today, 9:45 AM</td>
+                                            <td class="px-4 py-3 text-right whitespace-nowrap">$2,100.00</td>
+                                            <td class="px-4 py-3 whitespace-nowrap">
+                                                <span class="px-2 py-1 bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200 rounded-full text-xs">Bank</span>
+                                            </td>
+                                            <td class="px-4 py-3 whitespace-nowrap">TRF-987654</td>
+                                            <td class="px-4 py-3 whitespace-nowrap text-center">
+                                                <button class="text-sm px-3 py-1 bg-green-500 text-white rounded-md">Confirm</button>
+                                                <button class="text-sm px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded-md ml-1">View</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="mt-4 flex justify-between items-center">
+                                <div class="text-sm text-gray-500 dark:text-gray-400">Showing 3 of 16 pending confirmations</div>
+                                <div class="flex space-x-1">
+                                    <button class="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded-md">&lt;</button>
+                                    <button class="px-3 py-1 bg-primary text-white rounded-md">1</button>
+                                    <button class="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded-md">2</button>
+                                    <button class="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded-md">3</button>
+                                    <button class="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded-md">&gt;</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Receipt Generator UI -->
+                <div id="receipt-ui" class="ui-content hidden bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
+                    <h3 class="text-xl font-semibold mb-4">Receipt Generation</h3>
+                    <div class="mockup-container border-2 border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden">
+                        <div class="mockup-header bg-primary p-4 text-white flex justify-between items-center">
+                            <div class="text-lg font-bold">Generate Receipt</div>
+                            <div class="flex items-center space-x-4">
+                                <span>Jane Doe (Sales)</span>
+                                <div class="w-8 h-8 bg-white rounded-full"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="p-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <div class="mb-4">
+                                    <h4 class="font-medium text-lg mb-2">Transaction Details</h4>
+                                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                                        <div class="grid grid-cols-2 gap-2 text-sm">
+                                            <div class="font-medium">Transaction ID:</div>
+                                            <div>SALE-1023</div>
+                                            <div class="font-medium">Client:</div>
+                                            <div>XYZ Corporation</div>
+                                            <div class="font-medium">Date:</div>
+                                            <div>Dec 15, 2023</div>
+                                            <div class="font-medium">Payment Method:</div>
+                                            <div>Cash</div>
+                                            <div class="font-medium">Total Amount:</div>
+                                            <div>$1,250.00</div>
+                                            <div class="font-medium">Status:</div>
+                                            <div><span class="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-xs">Cash Pending Deposit</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <h4 class="font-medium text-lg mb-2">Receipt Options</h4>
+                                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                                        <div class="mb-3">
+                                            <label class="block text-sm font-medium mb-1">Company Logo</label>
+                                            <select class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-md text-sm">
+                                                <option>Default Company Logo</option>
+                                                <option>No Logo</option>
+                                                <option>Alternate Logo</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label class="block text-sm font-medium mb-1">Include Customer Copy Text</label>
+                                            <div class="flex">
+                                                <label class="inline-flex items-center mr-4">
+                                                    <input type="radio" name="customer_copy" class="mr-1" checked>
+                                                    <span class="text-sm">Yes</span>
+                                                </label>
+                                                <label class="inline-flex items-center">
+                                                    <input type="radio" name="customer_copy" class="mr-1">
+                                                    <span class="text-sm">No</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label class="block text-sm font-medium mb-1">Additional Notes</label>
+                                            <textarea class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-md text-sm" rows="2" placeholder="Enter any additional notes to include on the receipt"></textarea>
+                                        </div>
+                                        
+                                        <div class="flex space-x-2">
+                                            <button class="w-full px-4 py-2 bg-primary text-white rounded-md">Generate Receipt</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h4 class="font-medium text-lg mb-2">Receipt Preview</h4>
+                                <div class="border-2 border-gray-300 dark:border-gray-600 rounded-lg h-[500px] flex items-center justify-center overflow-hidden">
+                                    <div class="bg-white p-6 w-full h-full overflow-y-auto">
+                                        <div class="text-center mb-4">
+                                            <div class="text-xl font-bold">COMPANY NAME</div>
+                                            <div class="text-sm">123 Business Address, City, Country</div>
+                                            <div class="text-sm">Phone: (123) 456-7890 | Email: info@company.com</div>
+                                        </div>
+                                        
+                                        <div class="text-center font-bold border-b border-t border-gray-300 py-1 mb-3">
+                                            RECEIPT
+                                        </div>
+                                        
+                                        <div class="grid grid-cols-2 gap-2 text-sm mb-3">
+                                            <div><strong>Receipt #:</strong> REC-2023-001</div>
+                                            <div><strong>Date:</strong> 15-Dec-2023</div>
+                                            <div><strong>Client:</strong> XYZ Corporation</div>
+                                            <div><strong>Salesperson:</strong> Jane Doe</div>
+                                        </div>
+                                        
+                                        <table class="w-full text-sm mb-4">
+                                            <thead>
+                                                <tr class="border-b border-gray-300">
+                                                    <th class="text-left py-1">Item</th>
+                                                    <th class="text-center py-1">Qty</th>
+                                                    <th class="text-right py-1">Price</th>
+                                                    <th class="text-right py-1">Total</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="py-1">Product A</td>
+                                                    <td class="text-center py-1">2</td>
+                                                    <td class="text-right py-1">$500.00</td>
+                                                    <td class="text-right py-1">$1,000.00</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="py-1">Product B</td>
+                                                    <td class="text-center py-1">1</td>
+                                                    <td class="text-right py-1">$250.00</td>
+                                                    <td class="text-right py-1">$250.00</td>
+                                                </tr>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr class="border-t border-gray-300">
+                                                    <td colspan="3" class="text-right py-1"><strong>Subtotal:</strong></td>
+                                                    <td class="text-right py-1">$1,250.00</td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="3" class="text-right py-1"><strong>Tax (0%):</strong></td>
+                                                    <td class="text-right py-1">$0.00</td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="3" class="text-right py-1"><strong>Total:</strong></td>
+                                                    <td class="text-right py-1">$1,250.00</td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                        
+                                        <div class="mb-3 text-sm">
+                                            <strong>Payment Method:</strong> Cash
+                                        </div>
+                                        
+                                        <div class="text-center text-xs mt-6 italic">
+                                            Thank you for your business!
+                                        </div>
+                                        
+                                        <div class="text-center text-xs mt-2">
+                                            ** CUSTOMER COPY **
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-3 flex space-x-2 justify-center">
+                                    <button class="px-4 py-2 bg-blue-500 text-white rounded-md flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                        </svg>
+                                        Download PDF
+                                    </button>
+                                    <button class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded-md flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                                        </svg>
+                                        Print Receipt
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Reports UI -->
+                <div id="reports-ui" class="ui-content hidden bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
+                    <h3 class="text-xl font-semibold mb-4">Reports & Analytics</h3>
+                    <div class="mockup-container border-2 border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden">
+                        <div class="mockup-header bg-primary p-4 text-white flex justify-between items-center">
+                            <div class="text-lg font-bold">Sales Analytics Dashboard</div>
+                            <div class="flex items-center space-x-4">
+                                <span>Michael Chen (Manager)</span>
+                                <div class="w-8 h-8 bg-white rounded-full"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="p-4">
+                            <div class="mb-6 flex flex-wrap gap-3">
+                                <button class="px-3 py-1 bg-primary text-white rounded-md">Sales Overview</button>
+                                <button class="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded-md">Payment Analysis</button>
+                                <button class="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded-md">Sales by Rep</button>
+                                <button class="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded-md">Client Analysis</button>
+                                <button class="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded-md">Product Performance</button>
+                                <button class="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded-md">Audit Logs</button>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                                <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+                                    <div class="text-sm text-gray-500 dark:text-gray-400">Total Sales (MTD)</div>
+                                    <div class="text-2xl font-bold">$45,750</div>
+                                    <div class="text-sm text-green-600 dark:text-green-400 flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                                        </svg>
+                                        12% vs Last Month
+                                    </div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+                                    <div class="text-sm text-gray-500 dark:text-gray-400">Transactions (MTD)</div>
+                                    <div class="text-2xl font-bold">128</div>
+                                    <div class="text-sm text-green-600 dark:text-green-400 flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                                        </svg>
+                                        8% vs Last Month
+                                    </div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+                                    <div class="text-sm text-gray-500 dark:text-gray-400">Average Order Value</div>
+                                    <div class="text-2xl font-bold">$357</div>
+                                    <div class="text-sm text-green-600 dark:text-green-400 flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                                        </svg>
+                                        3% vs Last Month
+                                    </div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+                                    <div class="text-sm text-gray-500 dark:text-gray-400">Outstanding Deferred</div>
+                                    <div class="text-2xl font-bold">$12,500</div>
+                                    <div class="text-sm text-yellow-600 dark:text-yellow-400 flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                        </svg>
+                                        5 Due in Next 7 Days
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+                                    <div class="flex justify-between items-center mb-3">
+                                        <h4 class="font-medium">Sales by Payment Method</h4>
+                                        <select class="text-sm px-2 py-1 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded">
+                                            <option>Last 30 Days</option>
+                                            <option>Last 90 Days</option>
+                                            <option>This Year</option>
+                                        </select>
+                                    </div>
+                                    <div class="chart-placeholder h-64 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center">
+                                        <div class="text-center text-gray-500 dark:text-gray-400">
+                                            <div>Pie Chart: Payment Methods</div>
+                                            <div class="text-xs mt-2 grid grid-cols-2 gap-x-4 gap-y-1">
+                                                <div class="flex items-center"><span class="w-3 h-3 bg-blue-500 mr-1 rounded-sm"></span> Cash: 45%</div>
+                                                <div class="flex items-center"><span class="w-3 h-3 bg-green-500 mr-1 rounded-sm"></span> POS: 30%</div>
+                                                <div class="flex items-center"><span class="w-3 h-3 bg-purple-500 mr-1 rounded-sm"></span> Bank: 15%</div>
+                                                <div class="flex items-center"><span class="w-3 h-3 bg-yellow-500 mr-1 rounded-sm"></span> Deferred: 10%</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+                                    <div class="flex justify-between items-center mb-3">
+                                        <h4 class="font-medium">Sales Trend</h4>
+                                        <select class="text-sm px-2 py-1 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded">
+                                            <option>Weekly</option>
+                                            <option>Monthly</option>
+                                            <option>Quarterly</option>
+                                        </select>
+                                    </div>
+                                    <div class="chart-placeholder h-64 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center">
+                                        <div class="text-center text-gray-500 dark:text-gray-400">
+                                            <div>Line Chart: Sales Trend</div>
+                                            <div class="text-xs">(Weekly sales amounts over time)</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 border border-gray-200 dark:border-gray-700 mb-6">
+                                <div class="flex justify-between items-center mb-3">
+                                    <h4 class="font-medium">Top Performing Sales Representatives</h4>
+                                    <select class="text-sm px-2 py-1 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded">
+                                        <option>This Month</option>
+                                        <option>Last Month</option>
+                                        <option>This Quarter</option>
+                                        <option>This Year</option>
+                                    </select>
+                                </div>
+                                <div class="overflow-x-auto">
+                                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                        <thead class="bg-gray-50 dark:bg-gray-700">
+                                            <tr>
+                                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Rep Name</th>
+                                                <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Sales</th>
+                                                <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Transactions</th>
+                                                <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Avg. Order</th>
+                                                <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Performance</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="px-4 py-3 whitespace-nowrap">Jane Doe</td>
+                                                <td class="px-4 py-3 text-right whitespace-nowrap">$15,750</td>
+                                                <td class="px-4 py-3 text-right whitespace-nowrap">42</td>
+                                                <td class="px-4 py-3 text-right whitespace-nowrap">$375</td>
+                                                <td class="px-4 py-3 text-center">
+                                                    <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2.5">
+                                                        <div class="bg-green-500 h-2.5 rounded-full" style="width: 95%"></div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="px-4 py-3 whitespace-nowrap">John Smith</td>
+                                                <td class="px-4 py-3 text-right whitespace-nowrap">$12,300</td>
+                                                <td class="px-4 py-3 text-right whitespace-nowrap">35</td>
+                                                <td class="px-4 py-3 text-right whitespace-nowrap">$351</td>
+                                                <td class="px-4 py-3 text-center">
+                                                    <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2.5">
+                                                        <div class="bg-blue-500 h-2.5 rounded-full" style="width: 75%"></div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="px-4 py-3 whitespace-nowrap">Robert Johnson</td>
+                                                <td class="px-4 py-3 text-right whitespace-nowrap">$9,200</td>
+                                                <td class="px-4 py-3 text-right whitespace-nowrap">28</td>
+                                                <td class="px-4 py-3 text-right whitespace-nowrap">$328</td>
+                                                <td class="px-4 py-3 text-center">
+                                                    <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2.5">
+                                                        <div class="bg-yellow-500 h-2.5 rounded-full" style="width: 60%"></div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <div class="flex justify-end">
+                                <button class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded-md flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                    </svg>
+                                    Export Report
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Pricing Tab -->
+            <div id="pricing" class="tab-pane hidden">
+                <h2 class="text-2xl font-bold mb-6">System Pricing & Fees</h2>
+                
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
+                    <h3 class="text-xl font-semibold mb-4">Implementation Fee Structure</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                    <thead class="bg-gray-50 dark:bg-gray-700">
+                                        <tr>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Implementation Phase</th>
+                                            <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Est. Cost</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                        <tr>
+                                            <td class="px-4 py-3 whitespace-nowrap">Discovery & Planning</td>
+                                            <td class="px-4 py-3 text-right whitespace-nowrap">$800-1,000</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="px-4 py-3 whitespace-nowrap">Zoho Books Setup</td>
+                                            <td class="px-4 py-3 text-right whitespace-nowrap">$600-800</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="px-4 py-3 whitespace-nowrap">Creator App Development</td>
+                                            <td class="px-4 py-3 text-right whitespace-nowrap">$2,400-2,800</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="px-4 py-3 whitespace-nowrap">Integration & Testing</td>
+                                            <td class="px-4 py-3 text-right whitespace-nowrap">$1,200-1,400</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="px-4 py-3 whitespace-nowrap">Deployment & Training</td>
+                                            <td class="px-4 py-3 text-right whitespace-nowrap">$800-1,000</td>
+                                        </tr>
+                                        <tr class="bg-gray-50 dark:bg-gray-700">
+                                            <td class="px-4 py-3 font-medium">Total Implementation</td>
+                                            <td class="px-4 py-3 text-right font-medium">$5,800-7,000</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="mt-4 bg-blue-50 dark:bg-blue-900/30 p-4 rounded-lg">
+                                <h4 class="font-medium text-blue-700 dark:text-blue-300 mb-2">Implementation Notes</h4>
+                                <ul class="list-disc pl-5 text-sm text-blue-600 dark:text-blue-300 space-y-1">
+                                    <li>One-time implementation costs based on estimated hours</li>
+                                    <li>Actual costs may vary based on specific requirements</li>
+                                    <li>Complex customizations may require additional budget</li>
+                                    <li>Payment schedule: 40% upfront, 30% at midpoint, 30% on completion</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                    <thead class="bg-gray-50 dark:bg-gray-700">
+                                        <tr>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Service</th>
+                                            <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Cost</th>
+                                            <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Frequency</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                        <tr>
+                                            <td class="px-4 py-3 whitespace-nowrap">Zoho Books Subscription</td>
+                                            <td class="px-4 py-3 text-right whitespace-nowrap">$20-50</td>
+                                            <td class="px-4 py-3 text-right whitespace-nowrap">Monthly per user</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="px-4 py-3 whitespace-nowrap">Zoho Creator Subscription</td>
+                                            <td class="px-4 py-3 text-right whitespace-nowrap">$25-40</td>
+                                            <td class="px-4 py-3 text-right whitespace-nowrap">Monthly per user</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="px-4 py-3 whitespace-nowrap">Maintenance Support</td>
+                                            <td class="px-4 py-3 text-right whitespace-nowrap">$200-400</td>
+                                            <td class="px-4 py-3 text-right whitespace-nowrap">Monthly (optional)</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="px-4 py-3 whitespace-nowrap">Future Enhancements</td>
+                                            <td class="px-4 py-3 text-right whitespace-nowrap">$75-100</td>
+                                            <td class="px-4 py-3 text-right whitespace-nowrap">Hourly, as needed</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="mt-4 bg-green-50 dark:bg-green-900/30 p-4 rounded-lg">
+                                <h4 class="font-medium text-green-700 dark:text-green-300 mb-2">ROI & Benefits</h4>
+                                <ul class="list-disc pl-5 text-sm text-green-600 dark:text-green-300 space-y-1">
+                                    <li>Average time savings of 15-20 hours per week for sales and finance teams</li>
+                                    <li>Reduced invoicing errors (estimated 95% reduction)</li>
+                                    <li>Improved cash flow through faster payment processing</li>
+                                    <li>Enhanced customer experience with immediate receipts</li>
+                                    <li>Better reporting for data-driven business decisions</li>
+                                    <li>Typical ROI: 4-6 months based on business volume</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                        <h3 class="text-xl font-semibold mb-4">Support & Maintenance</h3>
+                        <div class="space-y-4">
+                            <div class="border-b border-gray-200 dark:border-gray-700 pb-4">
+                                <h4 class="font-medium text-lg mb-2">Standard Support Package</h4>
+                                <div class="text-3xl font-bold">$200<span class="text-sm font-normal text-gray-500 dark:text-gray-400">/month</span></div>
+                                <ul class="mt-4 space-y-2">
+                                    <li class="flex items-center">
+                                        <svg class="h-5 w-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                        Email support (24-hour response time)
+                                    </li>
+                                    <li class="flex items-center">
+                                        <svg class="h-5 w-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                        Bug fixes and minor updates
+                                    </li>
+                                    <li class="flex items-center">
+                                        <svg class="h-5 w-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                        Monthly system health check
+                                    </li>
+                                    <li class="flex items-center">
+                                        <svg class="h-5 w-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                        2 hours of consulting/changes per month
+                                    </li>
+                                </ul>
+                            </div>
+                            
+                            <div class="border-b border-gray-200 dark:border-gray-700 pb-4">
+                                <h4 class="font-medium text-lg mb-2">Premium Support Package</h4>
+                                <div class="text-3xl font-bold">$400<span class="text-sm font-normal text-gray-500 dark:text-gray-400">/month</span></div>
+                                <ul class="mt-4 space-y-2">
+                                    <li class="flex items-center">
+                                        <svg class="h-5 w-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                        Priority email support (8-hour response time)
+                                    </li>
+                                    <li class="flex items-center">
+                                        <svg class="h-5 w-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                        Phone support during business hours
+                                    </li>
+                                    <li class="flex items-center">
+                                        <svg class="h-5 w-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                        Bug fixes and system enhancements
+                                    </li>
+                                    <li class="flex items-center">
+                                        <svg class="h-5 w-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                        Weekly system health check
+                                    </li>
+                                    <li class="flex items-center">
+                                        <svg class="h-5 w-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                        5 hours of consulting/changes per month
+                                    </li>
+                                    <li class="flex items-center">
+                                        <svg class="h-5 w-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                        Quarterly system review and optimization
+                                    </li>
+                                </ul>
+                            </div>
+                            
+                            <div>
+                                <h4 class="font-medium text-lg mb-2">Pay-As-You-Go Support</h4>
+                                <div class="text-3xl font-bold">$100<span class="text-sm font-normal text-gray-500 dark:text-gray-400">/hour</span></div>
+                                <p class="mt-2 text-gray-600 dark:text-gray-300">For clients who prefer on-demand support without a monthly commitment.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                        <h3 class="text-xl font-semibold mb-4">Payment Options</h3>
+                        
+                        <div class="mb-6">
+                            <h4 class="font-medium text-lg mb-3">Implementation Payment Schedule</h4>
+                            <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                                <div class="space-y-4">
+                                    <div class="flex justify-between">
+                                        <div>
+                                            <div class="font-medium">Initial Payment (40%)</div>
+                                            <div class="text-sm text-gray-500 dark:text-gray-400">Due at project kickoff</div>
+                                        </div>
+                                        <div class="font-medium">$2,320 - $2,800</div>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <div>
+                                            <div class="font-medium">Midpoint Payment (30%)</div>
+                                            <div class="text-sm text-gray-500 dark:text-gray-400">Due after Zoho Creator development</div>
+                                        </div>
+                                        <div class="font-medium">$1,740 - $2,100</div>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <div>
+                                            <div class="font-medium">Final Payment (30%)</div>
+                                            <div class="text-sm text-gray-500 dark:text-gray-400">Due upon project completion</div>
+                                        </div>
+                                        <div class="font-medium">$1,740 - $2,100</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <h4 class="font-medium text-lg mb-3">Accepted Payment Methods</h4>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 text-center">
+                                    <div class="font-medium mb-2">Direct Bank Transfer</div>
+                                    <div class="text-sm text-gray-500 dark:text-gray-400">No additional fees</div>
+                                </div>
+                                <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 text-center">
+                                    <div class="font-medium mb-2">Credit Card</div>
+                                    <div class="text-sm text-gray-500 dark:text-gray-400">3% processing fee</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 class="font-medium text-lg mb-3">Custom Solutions</h4>
+                            <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                                <p class="text-gray-600 dark:text-gray-300 mb-3">Need additional features or services beyond the standard package?</p>
+                                <div class="space-y-2">
+                                    <div class="flex justify-between">
+                                        <span>API Integration with Other Systems</span>
+                                        <span>From $1,200</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span>Custom Reports & Dashboards</span>
+                                        <span>From $800</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span>Mobile App Development</span>
+                                        <span>From $3,500</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span>Data Migration Services</span>
+                                        <span>From $1,500</span>
+                                    </div>
+                                </div>
+                                <div class="mt-4 text-sm text-gray-500 dark:text-gray-400">
+                                    Custom solutions are quoted separately based on specific requirements.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline Tab -->
+            <div id="timeline" class="tab-pane hidden">
+                <h2 class="text-2xl font-bold mb-6">Project Timeline</h2>
+                
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
+                    <h3 class="text-xl font-semibold mb-4">Implementation Timeline</h3>
+                    <div class="timeline-container">
+                        <div class="timeline-diagram relative pb-12">
+                            <!-- Vertical line -->
+                            <div class="absolute left-0 w-1 bg-primary h-full"></div>
+                            
+                            <!-- Phase 1 -->
+                            <div class="relative pl-8 pb-8">
+                                <div class="absolute left-0 w-6 h-6 rounded-full bg-primary -translate-x-2.5"></div>
+                                <div class="font-bold">Phase 1: Discovery & Planning (Week 1-2)</div>
+                                <div class="text-gray-600 dark:text-gray-300 mt-2">
+                                    <ul class="list-disc pl-5 space-y-1">
+                                        <li>Initial consultation and requirements gathering</li>
+                                        <li>Review current business processes and workflows</li>
+                                        <li>Document client types and payment methods</li>
+                                        <li>Define approval hierarchy and process flow</li>
+                                        <li>Finalize project plan and timelines</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <!-- Phase 2 -->
+                            <div class="relative pl-8 pb-8">
+                                <div class="absolute left-0 w-6 h-6 rounded-full bg-primary -translate-x-2.5"></div>
+                                <div class="font-bold">Phase 2: Zoho Books Setup (Week 3)</div>
+                                <div class="text-gray-600 dark:text-gray-300 mt-2">
+                                    <ul class="list-disc pl-5 space-y-1">
+                                        <li>Configure Zoho Books account settings</li>
+                                        <li>Set up chart of accounts and tax configurations</li>
+                                        <li>Create invoice templates and customizations</li>
+                                        <li>Configure client categories and payment terms</li>
+                                        <li>Implement basic API connection testing</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <!-- Phase 3 -->
+                            <div class="relative pl-8 pb-8">
+                                <div class="absolute left-0 w-6 h-6 rounded-full bg-primary -translate-x-2.5"></div>
+                                <div class="font-bold">Phase 3: Zoho Creator App Development (Week 4-6)</div>
+                                <div class="text-gray-600 dark:text-gray-300 mt-2">
+                                    <ul class="list-disc pl-5 space-y-1">
+                                        <li>Design database schema and relationships</li>
+                                        <li>Develop Sales_Entry form and validation</li>
+                                        <li>Create payment processing workflows for all payment types</li>
+                                        <li>Implement approval system for deferred payments</li>
+                                        <li>Build receipt generation functionality</li>
+                                        <li>Develop reports and dashboards</li>
+                                        <li>Implement error handling and logging</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <!-- Phase 4 -->
+                            <div class="relative pl-8 pb-8">
+                                <div class="absolute left-0 w-6 h-6 rounded-full bg-primary -translate-x-2.5"></div>
+                                <div class="font-bold">Phase 4: Integration & Testing (Week 7-8)</div>
+                                <div class="text-gray-600 dark:text-gray-300 mt-2">
+                                    <ul class="list-disc pl-5 space-y-1">
+                                        <li>Implement API integration between Creator and Books</li>
+                                        <li>Set up data synchronization and validation</li>
+                                        <li>Develop automated payment reminders</li>
+                                        <li>Conduct unit testing of individual components</li>
+                                        <li>Perform integrated system testing</li>
+                                        <li>User acceptance testing with sample data</li>
+                                        <li>Address feedback and make adjustments</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <!-- Phase 5 -->
+                            <div class="relative pl-8">
+                                <div class="absolute left-0 w-6 h-6 rounded-full bg-primary -translate-x-2.5"></div>
+                                <div class="font-bold">Phase 5: Deployment & Training (Week 9-10)</div>
+                                <div class="text-gray-600 dark:text-gray-300 mt-2">
+                                    <ul class="list-disc pl-5 space-y-1">
+                                        <li>Deploy systems to production environment</li>
+                                        <li>Migrate initial client data (if needed)</li>
+                                        <li>Create user documentation and help materials</li>
+                                        <li>Conduct role-specific training sessions:</li>
+                                        <ul class="list-circle pl-5 text-sm space-y-1">
+                                            <li>Sales team training</li>
+                                            <li>Manager approval process training</li>
+                                            <li>Finance confirmation process training</li>
+                                            <li>Administrator system management training</li>
+                                        </ul>
+                                        <li>Provide post-implementation support</li>
+                                        <li>Project handover and closure</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                        <h3 class="text-xl font-semibold mb-4">Key Milestones</h3>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <div class="font-medium">Project Kickoff</div>
+                                    <div class="text-sm text-gray-600 dark:text-gray-300">Initial consultation and planning</div>
+                                </div>
+                                <div class="text-sm">Week 1</div>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <div class="font-medium">Zoho Books Configuration</div>
+                                    <div class="text-sm text-gray-600 dark:text-gray-300">Basic financial system setup</div>
+                                </div>
+                                <div class="text-sm">Week 3</div>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <div class="font-medium">Sales Entry Form Complete</div>
+                                    <div class="text-sm text-gray-600 dark:text-gray-300">Core data collection functionality</div>
+                                </div>
+                                <div class="text-sm">Week 5</div>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <div class="font-medium">Payment Processing Complete</div>
+                                    <div class="text-sm text-gray-600 dark:text-gray-300">All payment types functioning</div>
+                                </div>
+                                <div class="text-sm">Week 6</div>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <div class="font-medium">Integration Complete</div>
+                                    <div class="text-sm text-gray-600 dark:text-gray-300">Books and Creator fully connected</div>
+                                </div>
+                                <div class="text-sm">Week 7</div>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <div class="font-medium">User Testing</div>
+                                    <div class="text-sm text-gray-600 dark:text-gray-300">Client review and feedback</div>
+                                </div>
+                                <div class="text-sm">Week 8</div>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <div class="font-medium">Training Complete</div>
+                                    <div class="text-sm text-gray-600 dark:text-gray-300">Staff trained on all aspects</div>
+                                </div>
+                                <div class="text-sm">Week 9</div>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <div class="font-medium">Go-Live</div>
+                                    <div class="text-sm text-gray-600 dark:text-gray-300">System fully operational</div>
+                                </div>
+                                <div class="text-sm">Week 10</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                        <h3 class="text-xl font-semibold mb-4">Resource Requirements</h3>
+                        <div class="mb-4">
+                            <h4 class="font-medium mb-2">Client Resources Needed</h4>
+                            <ul class="list-disc pl-5 space-y-1">
+                                <li>Project sponsor to approve key decisions</li>
+                                <li>Finance representative for Books configuration</li>
+                                <li>Sales representative for workflow validation</li>
+                                <li>IT support for access and permissions</li>
+                                <li>End users for testing and feedback</li>
+                            </ul>
+                        </div>
+                        <div class="mb-4">
+                            <h4 class="font-medium mb-2">Deliverables</h4>
+                            <ul class="list-disc pl-5 space-y-1">
+                                <li>Configured Zoho Books system</li>
+                                <li>Custom Zoho Creator application with:
+                                    <ul class="list-circle pl-5 text-sm">
+                                        <li>Sales Entry form with multiple payment methods</li>
+                                        <li>Manager approval workflow</li>
+                                        <li>Payment confirmation process</li>
+                                        <li>Receipt generation function</li>
+                                        <li>Reports and analytics dashboard</li>
+                                    </ul>
+                                </li>
+                                <li>API integration between systems</li>
+                                <li>User documentation and guides</li>
+                                <li>Training materials and sessions</li>
+                                <li>30-day post-implementation support</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-medium mb-2">Estimated Time Investment</h4>
+                            <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
+                                <div class="grid grid-cols-2 gap-2 text-sm">
+                                    <div>Discovery & Planning:</div>
+                                    <div>20-25 hours</div>
+                                    <div>Zoho Books Setup:</div>
+                                    <div>15-20 hours</div>
+                                    <div>Creator App Development:</div>
+                                    <div>60-70 hours</div>
+                                    <div>Integration & Testing:</div>
+                                    <div>30-35 hours</div>
+                                    <div>Deployment & Training:</div>
+                                    <div>20-25 hours</div>
+                                    <div class="font-medium">Total Estimated Effort:</div>
+                                    <div class="font-medium">145-175 hours</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab navigation
+        document.querySelectorAll('.tab-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                    btn.classList.remove('text-primary', 'border-primary');
+                    btn.classList.add('text-gray-500', 'dark:text-gray-400', 'border-transparent');
+                });
+                
+                document.querySelectorAll('.tab-pane').forEach(tab => {
+                    tab.classList.add('hidden');
+                });
+                
+                button.classList.add('active', 'text-primary', 'border-primary');
+                button.classList.remove('text-gray-500', 'dark:text-gray-400', 'border-transparent');
+                
+                const tabName = button.getAttribute('data-tab');
+                document.getElementById(tabName).classList.remove('hidden');
+            });
+        });
+        
+        // Workflow toggle
+        document.querySelectorAll('.workflow-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                document.querySelectorAll('.workflow-btn').forEach(btn => {
+                    btn.classList.remove('active', 'bg-primary', 'text-white');
+                    btn.classList.add('bg-gray-200', 'dark:bg-gray-700');
+                });
+                
+                document.querySelectorAll('.workflow-content').forEach(content => {
+                    content.classList.add('hidden');
+                });
+                
+                button.classList.add('active', 'bg-primary', 'text-white');
+                button.classList.remove('bg-gray-200', 'dark:bg-gray-700');
+                
+                const workflowName = button.getAttribute('data-workflow');
+                document.getElementById(workflowName + '-workflow').classList.remove('hidden');
+            });
+        });
+        
+        // UI mockup toggle
+        document.querySelectorAll('.ui-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                document.querySelectorAll('.ui-btn').forEach(btn => {
+                    btn.classList.remove('active', 'bg-primary', 'text-white');
+                    btn.classList.add('bg-gray-200', 'dark:bg-gray-700');
+                });
+                
+                document.querySelectorAll('.ui-content').forEach(content => {
+                    content.classList.add('hidden');
+                });
+                
+                button.classList.add('active', 'bg-primary', 'text-white');
+                button.classList.remove('bg-gray-200', 'dark:bg-gray-700');
+                
+                const uiName = button.getAttribute('data-ui');
+                document.getElementById(uiName + '-ui').classList.remove('hidden');
+            });
+        });
+        
+        // Payment type toggle in sales form
+        const paymentTypeRadios = document.querySelectorAll('input[name="payment_type"]');
+        if (paymentTypeRadios.length > 0) {
+            paymentTypeRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    // Hide all payment type fields
+                    document.getElementById('cash-fields').classList.add('hidden');
+                    document.getElementById('pos-fields').classList.add('hidden');
+                    document.getElementById('bank-fields').classList.add('hidden');
+                    document.getElementById('deferred-fields').classList.add('hidden');
+                    
+                    // Show the selected payment type fields
+                    const value = this.parentElement.textContent.trim();
+                    if (value === 'Cash') {
+                        document.getElementById('cash-fields').classList.remove('hidden');
+                    } else if (value === 'POS') {
+                        document.getElementById('pos-fields').classList.remove('hidden');
+                    } else if (value === 'Bank Transfer') {
+                        document.getElementById('bank-fields').classList.remove('hidden');
+                    } else if (value === 'Deferred') {
+                        document.getElementById('deferred-fields').classList.remove('hidden');
+                    }
+                });
+            });
+        }
+    </script>
+</body>
+</html>
